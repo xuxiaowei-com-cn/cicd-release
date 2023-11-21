@@ -1,4 +1,4 @@
-module github.com/xuxiaowei-com-cn/gitlab-go/buildinfo
+module github.com/xuxiaowei-com-cn/cicd-release/buildinfo
 
 go 1.21
 
