@@ -3,6 +3,7 @@ package api
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"github.com/xuxiaowei-com-cn/cicd-release/constant"
@@ -46,7 +47,22 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitLab，实例：%s", gitlabInstance)
 
-	err := AutoCreateTag(tag, autoCreateTag)
+	baseUrl, err := url.Parse(gitlabInstance)
+	if err != nil {
+		log.Println("Gitlab 实例配置错误，无法转为 URL")
+		panic(err)
+	}
+
+	gitlabRepositoryEscape := url.PathEscape(gitlabRepository)
+
+	getReleasesUrl := fmt.Sprintf("%s/%s/%s/%s/releases/%s", baseUrl, gitlabApi, "projects", gitlabRepositoryEscape, tag)
+
+	err = GetReleases(getReleasesUrl, gitlabToken)
+	if err != nil {
+		return err
+	}
+
+	err = AutoCreateTag(tag, autoCreateTag)
 	if err != nil {
 		return err
 	}
@@ -56,15 +72,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
-	baseUrl, err := url.Parse(gitlabInstance)
-	if err != nil {
-		log.Println("Gitlab 实例配置错误，无法转为 URL")
-		panic(err)
-	}
-
-	gitlabRepositoryEscape := url.PathEscape(gitlabRepository)
-
-	urlStr := fmt.Sprintf("%s/%s/%s/%s/releases", baseUrl, gitlabApi, "projects", gitlabRepositoryEscape)
+	releasesUrl := fmt.Sprintf("%s/%s/%s/%s/releases", baseUrl, gitlabApi, "projects", gitlabRepositoryEscape)
 
 	data := Data{
 		Name:        releaseName,
@@ -79,7 +87,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
-	req, err := http.NewRequest("POST", urlStr, bytes.NewBuffer(jsonData))
+	req, err := http.NewRequest("POST", releasesUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Println("Error creating request:", err)
 		return err
@@ -106,4 +114,36 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	log.Printf("artifacts：%s", artifacts)
 
 	return nil
+}
+
+func GetReleases(getReleasesUrl string, gitlabToken string) error {
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", getReleasesUrl, nil)
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return err
+	}
+
+	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return err
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Error closing response body:", err)
+		}
+	}(resp.Body)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response:", err)
+		return err
+	}
+
+	return errors.New(fmt.Sprintf("已存在此发布：\n%s", string(body)))
 }
