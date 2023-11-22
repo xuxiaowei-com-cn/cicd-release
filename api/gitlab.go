@@ -145,5 +145,9 @@ func GetReleases(getReleasesUrl string, gitlabToken string) error {
 		return err
 	}
 
+	if "{\"message\":\"404 Not Found\"}" == string(body) {
+		return nil
+	}
+
 	return errors.New(fmt.Sprintf("已存在此发布：\n%s", string(body)))
 }
