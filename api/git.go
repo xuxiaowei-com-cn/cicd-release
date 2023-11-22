@@ -29,7 +29,7 @@ func GitPrintTag(tag string) error {
 		return err
 	}
 
-	log.Printf("Git 标签 %s 内容: \n%s\n", tag, output)
+	log.Printf("Git 标签 %s 信息: \n%s\n", tag, output)
 	return nil
 }
 
