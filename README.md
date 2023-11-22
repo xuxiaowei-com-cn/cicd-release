@@ -186,19 +186,21 @@ COMMANDS:
    help, h  Shows a list of commands or help for one command
 
 OPTIONS:
-   --release-name value                     发布名称
-   --release-body value                     发布详情
-   --tag value                              发布标签
-   --auto-create-tag                        是否自动创建不存在的标签 (default: false)
-   --artifacts value [ --artifacts value ]  发布产物
-   --gitee-repository value                 Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
-   --gitee-token value                      Gitee Token
-   --gitlab-instance value                  Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
-   --gitlab-repository value                Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
-   --gitlab-token value                     Gitlab Token
-   --github-repository value                Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
-   --github-token value                     Github Token [%GITHUB_TOKEN%]
-   --help, -h                               show help
+   --release-name value                       发布名称
+   --release-body value                       发布详情
+   --tag value                                发布标签
+   --auto-create-tag                          是否自动创建不存在的标签 (default: false)
+   --milestones value [ --milestones value ]  发布里程碑
+   --artifacts value [ --artifacts value ]    发布产物
+   --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-token value                        Gitee Token
+   --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
+   --gitlab-api value                         Gitlab API，如：api/v4 (default: "api/v4")
+   --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-token value                       Gitlab Token
+   --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-token value                       Github Token [%GITHUB_TOKEN%]
+   --help, -h                                 show help
 ```
 
 - 发布
@@ -218,19 +220,21 @@ COMMANDS:
    help, h  Shows a list of commands or help for one command
 
 OPTIONS:
-   --release-name value                     发布名称
-   --release-body value                     发布详情
-   --tag value                              发布标签
-   --auto-create-tag                        是否自动创建不存在的标签 (default: false)
-   --artifacts value [ --artifacts value ]  发布产物
-   --gitee-repository value                 Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
-   --gitee-token value                      Gitee Token
-   --gitlab-instance value                  Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
-   --gitlab-repository value                Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
-   --gitlab-token value                     Gitlab Token
-   --github-repository value                Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
-   --github-token value                     Github Token [%GITHUB_TOKEN%]
-   --help, -h                               show help
+   --release-name value                       发布名称
+   --release-body value                       发布详情
+   --tag value                                发布标签
+   --auto-create-tag                          是否自动创建不存在的标签 (default: false)
+   --milestones value [ --milestones value ]  发布里程碑
+   --artifacts value [ --artifacts value ]    发布产物
+   --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-token value                        Gitee Token
+   --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
+   --gitlab-api value                         Gitlab API，如：api/v4 (default: "api/v4")
+   --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-token value                       Gitlab Token
+   --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-token value                       Github Token [%GITHUB_TOKEN%]
+   --help, -h                                 show help
 ```
 
 ### test
