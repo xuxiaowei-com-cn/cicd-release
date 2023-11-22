@@ -56,7 +56,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	gitlabRepositoryEscape := url.PathEscape(gitlabRepository)
 
 	getReleasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
-	err = GetReleases(getReleasesUrl, gitlabToken)
+	err = GitlabGetReleases(getReleasesUrl, gitlabToken)
 	if err != nil {
 		return err
 	}
@@ -67,7 +67,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	}
 
 	getTagUrl := fmt.Sprintf("%s/%s/projects/%s/repository/tags/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
-	err = GetTag(getTagUrl, gitlabToken, tag)
+	err = GitlabGetTag(getTagUrl, gitlabToken, tag)
 	if err != nil {
 		return err
 	}
@@ -120,7 +120,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	return nil
 }
 
-func GetTag(getTagUrl string, gitlabToken string, tag string) error {
+func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", getTagUrl, nil)
@@ -178,7 +178,7 @@ func GetTag(getTagUrl string, gitlabToken string, tag string) error {
 	}
 }
 
-func GetReleases(getReleasesUrl string, gitlabToken string) error {
+func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 
 	client := &http.Client{}
 	req, err := http.NewRequest("GET", getReleasesUrl, nil)
