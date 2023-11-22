@@ -181,7 +181,7 @@ USAGE:
 
 COMMANDS:
    gitee    Gitee 预发布
-   gitlab   GitLab 预发布
+   gitlab   GitLab 预发布，支持自定义实例（域名）
    github   GitHub 预发布
    help, h  Shows a list of commands or help for one command
 
@@ -215,7 +215,7 @@ USAGE:
 
 COMMANDS:
    gitee    Gitee 发布
-   gitlab   GitLab 发布
+   gitlab   GitLab 发布，支持自定义实例（域名）
    github   GitHub 发布
    help, h  Shows a list of commands or help for one command
 

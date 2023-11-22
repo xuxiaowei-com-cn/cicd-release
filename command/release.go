@@ -28,7 +28,7 @@ func ReleaseCommand() *cli.Command {
 			},
 			{
 				Name:  "gitlab",
-				Usage: "GitLab 发布",
+				Usage: "GitLab 发布，支持自定义实例（域名）",
 				Flags: flag.GitlabFlag(),
 				Action: func(context *cli.Context) error {
 
