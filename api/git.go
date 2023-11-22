@@ -8,7 +8,7 @@ import (
 
 // GitVersion 获取 Git 版本号
 func GitVersion() (string, error) {
-	cmd := exec.Command("git1", "--version")
+	cmd := exec.Command("git", "--version")
 	output, err := cmd.Output()
 	if err != nil {
 		log.Fatal("无法获取 Git 版本号")
