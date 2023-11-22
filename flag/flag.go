@@ -114,7 +114,7 @@ func GitlabInstanceFlag() cli.Flag {
 func GitlabApiFlag() cli.Flag {
 	return &cli.StringFlag{
 		Name:  constant.GitlabApi,
-		Usage: "Gitlab API，如：api/v4",
+		Usage: "Gitlab API",
 		Value: "api/v4",
 	}
 }

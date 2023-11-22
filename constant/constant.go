@@ -15,6 +15,6 @@ const (
 	GiteeRepository  = "gitee-repository"  // Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
 	GitlabToken      = "gitlab-token"      // Gitlab Token
 	GitlabInstance   = "gitlab-instance"   // Gitlab 实例（协议 + 域名）
-	GitlabApi        = "gitlab-api"        // Gitlab API，如：api/v4
+	GitlabApi        = "gitlab-api"        // Gitlab API
 	GitlabRepository = "gitlab-repository" // Gitee 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
 )

@@ -195,7 +195,7 @@ OPTIONS:
    --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
-   --gitlab-api value                         Gitlab API，如：api/v4 (default: "api/v4")
+   --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
    --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
@@ -229,7 +229,7 @@ OPTIONS:
    --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
-   --gitlab-api value                         Gitlab API，如：api/v4 (default: "api/v4")
+   --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
    --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
