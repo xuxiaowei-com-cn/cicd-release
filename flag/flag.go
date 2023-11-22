@@ -95,13 +95,12 @@ func GitlabRepositoryFlag(required bool) cli.Flag {
 	}
 }
 
-func GitlabInstanceFlag(required bool) cli.Flag {
+func GitlabInstanceFlag() cli.Flag {
 	return &cli.StringFlag{
-		Name:     constant.GitlabInstance,
-		Usage:    "Gitlab 实例（协议 + 域名）",
-		Value:    "https://gitlab.com",
-		EnvVars:  []string{"CI_SERVER_URL"},
-		Required: required,
+		Name:    constant.GitlabInstance,
+		Usage:   "Gitlab 实例（协议 + 域名）",
+		Value:   "https://gitlab.com",
+		EnvVars: []string{"CI_SERVER_URL"},
 	}
 }
 
@@ -126,7 +125,7 @@ func GitlabFlag() []cli.Flag {
 		AutoCreateTagFlag(),
 		ArtifactsFlag(),
 
-		GitlabInstanceFlag(true),
+		GitlabInstanceFlag(),
 		GitlabRepositoryFlag(true),
 		GitlabTokenFlag(true),
 	}
@@ -156,7 +155,7 @@ func CommonFlag() []cli.Flag {
 		GiteeRepositoryFlag(false),
 		GiteeTokenFlag(false),
 
-		GitlabInstanceFlag(false),
+		GitlabInstanceFlag(),
 		GitlabRepositoryFlag(false),
 		GitlabTokenFlag(false),
 
