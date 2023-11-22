@@ -11,6 +11,11 @@ func ReleaseCommand() *cli.Command {
 		Name:  "release",
 		Usage: "发布",
 		Flags: flag.CommonFlag(),
+		Before: func(context *cli.Context) error {
+			_, err := api.GitVersion()
+
+			return err
+		},
 		Subcommands: []*cli.Command{
 			{
 				Name:  "gitee",

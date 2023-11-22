@@ -11,6 +11,11 @@ func PreReleaseCommand() *cli.Command {
 		Name:  "pre-release",
 		Usage: "预发布",
 		Flags: flag.CommonFlag(),
+		Before: func(context *cli.Context) error {
+			_, err := api.GitVersion()
+
+			return err
+		},
 		Subcommands: []*cli.Command{
 			{
 				Name:  "gitee",
