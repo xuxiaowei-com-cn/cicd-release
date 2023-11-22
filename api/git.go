@@ -66,10 +66,8 @@ func GitCreateTag(tag string) error {
 	return GitPrintTag(tag)
 }
 
-func AutoCreateTag(context *cli.Context) error {
-	var tag = context.String(constant.Tag)
-	var autoCreateTag = context.Bool(constant.AutoCreateTag)
-
+// AutoCreateTag 自动创建标签
+func AutoCreateTag(tag string, autoCreateTag bool) error {
 	err := GitPrintTag(tag)
 	if err != nil {
 		if autoCreateTag {

@@ -12,7 +12,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitLab，实例：%s", gitlabInstance)
 
-	err := AutoCreateTag(context)
+	err := AutoCreateTag(tag, autoCreateTag)
 	if err != nil {
 		return err
 	}

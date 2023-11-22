@@ -6,10 +6,13 @@ import (
 )
 
 func Github(prerelease bool, context *cli.Context) error {
+	var tag = context.String(constant.Tag)
+	var autoCreateTag = context.Bool(constant.AutoCreateTag)
+
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitHub")
 
-	err := AutoCreateTag(context)
+	err := AutoCreateTag(tag, autoCreateTag)
 	if err != nil {
 		return err
 	}
