@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/xuxiaowei-com-cn/cicd-release/command"
 	"github.com/xuxiaowei-com-cn/git-go/buildinfo"
 	"gopkg.in/yaml.v3"
 	"log"
@@ -56,7 +57,10 @@ func main() {
 		Authors:   []*cli.Author{{Name: Author, Email: Email}},
 		Usage:     Description,
 		Copyright: Copyright,
-		Commands:  []*cli.Command{},
+		Commands: []*cli.Command{
+			command.PreReleaseCommand(),
+			command.ReleaseCommand(),
+		},
 	}
 
 	if err := app.Run(os.Args); err != nil {
