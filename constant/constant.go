@@ -6,6 +6,7 @@ const (
 	ReleaseName      = "release-name"      // 发布名称
 	ReleaseBody      = "release-body"      // 发布详情
 	Tag              = "tag"               // 发布标签
+	AutoCreateTag    = "auto-create-tag"   // 自动创建不存在的标签
 	Artifacts        = "artifacts"         // 发布产物
 	GithubToken      = "github-token"      // Github Token
 	GithubRepository = "github-repository" // Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release

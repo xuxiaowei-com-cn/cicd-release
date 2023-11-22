@@ -28,6 +28,14 @@ func TagFlag(required bool) cli.Flag {
 	}
 }
 
+func AutoCreateTagFlag() cli.Flag {
+	return &cli.BoolFlag{
+		Name:  constant.AutoCreateTag,
+		Usage: "是否自动创建不存在的标签",
+		Value: false,
+	}
+}
+
 func ArtifactsFlag() cli.Flag {
 	return &cli.StringSliceFlag{
 		Name:  constant.Artifacts,
@@ -102,6 +110,7 @@ func GiteeFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(),
 		TagFlag(true),
+		AutoCreateTagFlag(),
 		ArtifactsFlag(),
 
 		GiteeRepositoryFlag(true),
@@ -114,6 +123,7 @@ func GitlabFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(),
 		TagFlag(true),
+		AutoCreateTagFlag(),
 		ArtifactsFlag(),
 
 		GitlabInstanceFlag(true),
@@ -127,6 +137,7 @@ func GithubFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(),
 		TagFlag(true),
+		AutoCreateTagFlag(),
 		ArtifactsFlag(),
 
 		GithubRepositoryFlag(true),
@@ -139,6 +150,7 @@ func CommonFlag() []cli.Flag {
 		ReleaseNameFlag(false),
 		ReleaseBodyFlag(),
 		TagFlag(false),
+		AutoCreateTagFlag(),
 		ArtifactsFlag(),
 
 		GiteeRepositoryFlag(false),

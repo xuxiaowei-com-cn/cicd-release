@@ -142,6 +142,97 @@ go run main.go
 go run main.go help
 ```
 
+```shell
+$ go run main.go --help
+NAME:
+   cicd-release - 持续集成(CI)、持续交付(CD)、持续部署(CD) 发布 脚手架
+
+USAGE:
+   cicd-release [global options] command [command options] [arguments...]
+
+VERSION:
+   dev
+
+AUTHOR:
+   徐晓伟 <xuxiaowei@xuxiaowei.com.cn>
+
+COMMANDS:
+   pre-release  预发布
+   release      发布
+   help, h      Shows a list of commands or help for one command
+
+GLOBAL OPTIONS:
+   --help, -h     show help
+   --version, -v  print the version
+
+COPYRIGHT:
+   徐晓伟工作室 <xuxiaowei@xuxiaowei.com.cn>
+```
+
+- 预发布
+
+```shell
+$ go run main.go pre-release --help
+NAME:
+   cicd-release pre-release - 预发布
+
+USAGE:
+   cicd-release pre-release command [command options] [arguments...]
+
+COMMANDS:
+   gitee    Gitee 预发布
+   gitlab   GitLab 预发布
+   github   GitHub 预发布
+   help, h  Shows a list of commands or help for one command
+
+OPTIONS:
+   --release-name value                     发布名称
+   --release-body value                     发布详情
+   --tag value                              发布标签
+   --auto-create-tag                        是否自动创建不存在的标签 (default: false)
+   --artifacts value [ --artifacts value ]  发布产物
+   --gitee-repository value                 Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-token value                      Gitee Token
+   --gitlab-instance value                  Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
+   --gitlab-repository value                Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-token value                     Gitlab Token
+   --github-repository value                Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-token value                     Github Token [%GITHUB_TOKEN%]
+   --help, -h                               show help
+```
+
+- 发布
+
+```shell
+$ go run main.go release --help
+NAME:
+   cicd-release release - 发布
+
+USAGE:
+   cicd-release release command [command options] [arguments...]
+
+COMMANDS:
+   gitee    Gitee 发布
+   gitlab   GitLab 发布
+   github   GitHub 发布
+   help, h  Shows a list of commands or help for one command
+
+OPTIONS:
+   --release-name value                     发布名称
+   --release-body value                     发布详情
+   --tag value                              发布标签
+   --auto-create-tag                        是否自动创建不存在的标签 (default: false)
+   --artifacts value [ --artifacts value ]  发布产物
+   --gitee-repository value                 Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-token value                      Gitee Token
+   --gitlab-instance value                  Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
+   --gitlab-repository value                Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-token value                     Gitlab Token
+   --github-repository value                Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-token value                     Github Token [%GITHUB_TOKEN%]
+   --help, -h                               show help
+```
+
 ### test
 
 ```shell
