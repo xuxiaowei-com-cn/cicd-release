@@ -36,6 +36,13 @@ func AutoCreateTagFlag() cli.Flag {
 	}
 }
 
+func MilestonesFlag() cli.Flag {
+	return &cli.StringSliceFlag{
+		Name:  constant.Milestones,
+		Usage: "发布里程碑",
+	}
+}
+
 func ArtifactsFlag() cli.Flag {
 	return &cli.StringSliceFlag{
 		Name:  constant.Artifacts,
@@ -104,12 +111,21 @@ func GitlabInstanceFlag() cli.Flag {
 	}
 }
 
+func GitlabApiFlag() cli.Flag {
+	return &cli.StringFlag{
+		Name:  constant.GitlabApi,
+		Usage: "Gitlab API，如：api/v4",
+		Value: "api/v4",
+	}
+}
+
 func GiteeFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(),
 		TagFlag(true),
 		AutoCreateTagFlag(),
+		MilestonesFlag(),
 		ArtifactsFlag(),
 
 		GiteeRepositoryFlag(true),
@@ -123,9 +139,11 @@ func GitlabFlag() []cli.Flag {
 		ReleaseBodyFlag(),
 		TagFlag(true),
 		AutoCreateTagFlag(),
+		MilestonesFlag(),
 		ArtifactsFlag(),
 
 		GitlabInstanceFlag(),
+		GitlabApiFlag(),
 		GitlabRepositoryFlag(true),
 		GitlabTokenFlag(true),
 	}
@@ -137,6 +155,7 @@ func GithubFlag() []cli.Flag {
 		ReleaseBodyFlag(),
 		TagFlag(true),
 		AutoCreateTagFlag(),
+		MilestonesFlag(),
 		ArtifactsFlag(),
 
 		GithubRepositoryFlag(true),
@@ -150,12 +169,14 @@ func CommonFlag() []cli.Flag {
 		ReleaseBodyFlag(),
 		TagFlag(false),
 		AutoCreateTagFlag(),
+		MilestonesFlag(),
 		ArtifactsFlag(),
 
 		GiteeRepositoryFlag(false),
 		GiteeTokenFlag(false),
 
 		GitlabInstanceFlag(),
+		GitlabApiFlag(),
 		GitlabRepositoryFlag(false),
 		GitlabTokenFlag(false),
 
