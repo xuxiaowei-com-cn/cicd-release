@@ -7,6 +7,7 @@ import (
 	"math/big"
 	"net/url"
 	"os/exec"
+	"strings"
 )
 
 // RandomString 随机字符串
@@ -95,9 +96,11 @@ func GitTagSha(tag string) (string, error) {
 		return "", err
 	}
 
-	log.Printf("Git 标签 %s SHA: %s", tag, string(output))
+	sha := strings.ReplaceAll(string(output), "\n", "")
 
-	return string(output), nil
+	log.Printf("Git 标签 %s SHA: %s", tag, sha)
+
+	return sha, nil
 }
 
 func GitPrintTag(tag string) error {

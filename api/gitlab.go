@@ -11,7 +11,6 @@ import (
 	"log"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 type Link struct {
@@ -172,11 +171,11 @@ func GetTag(getTagUrl string, gitlabToken string, tag string) error {
 		return nil
 	}
 
-	if sha != targetValue {
-		return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, strings.ReplaceAll(sha, "\n", ""), tag, targetValue))
+	if sha == targetValue {
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, sha, tag, targetValue))
 	}
-
-	return errors.New(fmt.Sprintf("已存在此标签：\n%s", string(body)))
 }
 
 func GetReleases(getReleasesUrl string, gitlabToken string) error {
