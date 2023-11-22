@@ -88,6 +88,18 @@ func GitPushTag(instance string, repository string, token, tag string) error {
 	return nil
 }
 
+func GitTagSha(tag string) (string, error) {
+	cmd := exec.Command("git", "rev-parse", tag)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	log.Printf("Git 标签 %s SHA: %s", tag, string(output))
+
+	return string(output), nil
+}
+
 func GitPrintTag(tag string) error {
 	cmd := exec.Command("git", "show", tag, "--no-patch")
 	output, err := cmd.Output()
@@ -96,7 +108,7 @@ func GitPrintTag(tag string) error {
 		return err
 	}
 
-	log.Printf("Git 标签 %s 信息: \n%s\n", tag, output)
+	log.Printf("Git 标签 %s 信息: \n%s", tag, output)
 	return nil
 }
 

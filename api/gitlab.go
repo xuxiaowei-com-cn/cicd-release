@@ -11,6 +11,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 )
 
 type Link struct {
@@ -45,7 +46,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	var gitlabToken = context.String(constant.GitlabToken)
 
 	log.Printf("是否是预发布版本：%v", prerelease)
-	log.Printf("发布到 GitLab，实例：%s", gitlabInstance)
+	log.Printf("发布到 GitLab，实例：%s，路径：%s", gitlabInstance, gitlabRepository)
 
 	baseUrl, err := url.Parse(gitlabInstance)
 	if err != nil {
@@ -55,8 +56,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 
 	gitlabRepositoryEscape := url.PathEscape(gitlabRepository)
 
-	getReleasesUrl := fmt.Sprintf("%s/%s/%s/%s/releases/%s", baseUrl, gitlabApi, "projects", gitlabRepositoryEscape, tag)
-
+	getReleasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
 	err = GetReleases(getReleasesUrl, gitlabToken)
 	if err != nil {
 		return err
@@ -67,12 +67,16 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
-	err = GitPushTag(gitlabInstance, gitlabRepository, gitlabToken, tag)
+	getTagUrl := fmt.Sprintf("%s/%s/projects/%s/repository/tags/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
+	err = GetTag(getTagUrl, gitlabToken, tag)
 	if err != nil {
 		return err
 	}
 
-	releasesUrl := fmt.Sprintf("%s/%s/%s/%s/releases", baseUrl, gitlabApi, "projects", gitlabRepositoryEscape)
+	err = GitPushTag(gitlabInstance, gitlabRepository, gitlabToken, tag)
+	if err != nil {
+		return err
+	}
 
 	data := Data{
 		Name:        releaseName,
@@ -87,6 +91,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
+	releasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases", baseUrl, gitlabApi, gitlabRepositoryEscape)
 	req, err := http.NewRequest("POST", releasesUrl, bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -114,6 +119,64 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	log.Printf("artifacts：%s", artifacts)
 
 	return nil
+}
+
+func GetTag(getTagUrl string, gitlabToken string, tag string) error {
+
+	client := &http.Client{}
+	req, err := http.NewRequest("GET", getTagUrl, nil)
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return err
+	}
+
+	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return err
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Error closing response body:", err)
+		}
+	}(resp.Body)
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response:", err)
+		return err
+	}
+
+	if "{\"message\":\"404 Tag Not Found\"}" == string(body) {
+		return nil
+	}
+
+	var data map[string]interface{}
+	err = json.Unmarshal(body, &data)
+	if err != nil {
+		log.Println("Unmarshal Error:", err)
+		return err
+	}
+
+	// 从map中取出目标值
+	targetValue, ok := data["target"].(string)
+	if !ok {
+		log.Println("Target value not found or not a string")
+	}
+
+	sha, err := GitTagSha(tag)
+	if err != nil {
+		return nil
+	}
+
+	if sha != targetValue {
+		return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, strings.ReplaceAll(sha, "\n", ""), tag, targetValue))
+	}
+
+	return errors.New(fmt.Sprintf("已存在此标签：\n%s", string(body)))
 }
 
 func GetReleases(getReleasesUrl string, gitlabToken string) error {
