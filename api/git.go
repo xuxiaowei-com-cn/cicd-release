@@ -1,11 +1,33 @@
 package api
 
 import (
-	"github.com/urfave/cli/v2"
-	"github.com/xuxiaowei-com-cn/cicd-release/constant"
+	"crypto/rand"
 	"log"
+	"math/big"
 	"os/exec"
 )
+
+// RandomString 随机字符串
+func RandomString(charset string, length int) string {
+	// abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
+
+	result := ""
+	charsetLength := big.NewInt(int64(len(charset)))
+	for i := 0; i < length; i++ {
+		randomIndex, err := rand.Int(rand.Reader, charsetLength)
+		if err != nil {
+			panic(err)
+		}
+		result += string(charset[randomIndex.Int64()])
+	}
+	return result
+}
+
+// LowerCaseRandomString 小写随机字符串
+func LowerCaseRandomString(length int) string {
+	charset := "abcdefghijklmnopqrstuvwxyz"
+	return RandomString(charset, length)
+}
 
 // GitVersion 获取 Git 版本号
 func GitVersion() (string, error) {
