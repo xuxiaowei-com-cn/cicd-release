@@ -2,7 +2,6 @@ package api
 
 import (
 	"crypto/rand"
-	"fmt"
 	"log"
 	"math/big"
 	"net/url"
@@ -49,7 +48,8 @@ func GitVersion() (string, error) {
 // GitPushTag 推送标签
 func GitPushTag(instance string, repository string, username, token, tag string) error {
 
-	origin := LowerCaseRandomString(6)
+	// origin := LowerCaseRandomString(6)
+	origin := "origin"
 
 	instanceUrl, err := url.Parse(instance)
 	if err != nil {
@@ -58,15 +58,15 @@ func GitPushTag(instance string, repository string, username, token, tag string)
 	}
 
 	instanceUrl.User = url.UserPassword(username, token)
-	urlUserStr := fmt.Sprintf("%s/%s%s", instanceUrl, repository, ".git")
-	urlStr := fmt.Sprintf("%s/%s%s", instance, repository, ".git")
+	//urlUserStr := fmt.Sprintf("%s/%s%s", instanceUrl, repository, ".git")
+	//urlStr := fmt.Sprintf("%s/%s%s", instance, repository, ".git")
 
-	cmdAddRemote := exec.Command("git", "remote", "add", origin, urlUserStr)
-	_, err = cmdAddRemote.Output()
-	if err != nil {
-		log.Printf("Git 添加临时远端 %s 地址 %s 异常\n", origin, urlStr)
-		return err
-	}
+	//cmdAddRemote := exec.Command("git", "remote", "add", origin, urlUserStr)
+	//_, err = cmdAddRemote.Output()
+	//if err != nil {
+	//	log.Printf("Git 添加临时远端 %s 地址 %s 异常\n", origin, urlStr)
+	//	return err
+	//}
 
 	log.Printf("Git 推送远端 标签 %s 开始\n", tag)
 
@@ -79,12 +79,12 @@ func GitPushTag(instance string, repository string, username, token, tag string)
 
 	log.Printf("Git 推送远端 标签 %s 完成\n", tag)
 
-	cmdRmRemote := exec.Command("git", "remote", "rm", origin)
-	_, err = cmdRmRemote.Output()
-	if err != nil {
-		log.Printf("Git 删除临时远端 %s 地址 %s 异常\n", origin, urlStr)
-		return err
-	}
+	//cmdRmRemote := exec.Command("git", "remote", "rm", origin)
+	//_, err = cmdRmRemote.Output()
+	//if err != nil {
+	//	log.Printf("Git 删除临时远端 %s 地址 %s 异常\n", origin, urlStr)
+	//	return err
+	//}
 
 	return nil
 }
