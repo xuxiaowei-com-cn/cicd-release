@@ -139,7 +139,7 @@ go run main.go
 - Linux 环境为 $xxx
 
 ```shell
-go run main.go help
+go run main.go --help
 ```
 
 ```shell
@@ -189,16 +189,23 @@ OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
+   --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
+                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
    --milestones value [ --milestones value ]  发布里程碑
-   --artifacts value [ --artifacts value ]    发布产物
-   --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --artifacts value [ --artifacts value ]    发布产物（包含路径）。
+                                              可以包含多级路径。
+                                              文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。
+   --gitee-repository value                   Gitee 仓库。
+                                              如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
    --gitlab-api value                         Gitlab API (default: "api/v4")
-   --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-repository value                  Gitlab 仓库。
+                                              如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
-   --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-repository value                  Github 仓库。
+                                              如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
    --help, -h                                 show help
 ```
@@ -223,16 +230,23 @@ OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
+   --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
+                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
    --milestones value [ --milestones value ]  发布里程碑
-   --artifacts value [ --artifacts value ]    发布产物
-   --gitee-repository value                   Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --artifacts value [ --artifacts value ]    发布产物（包含路径）。
+                                              可以包含多级路径。
+                                              文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。
+   --gitee-repository value                   Gitee 仓库。
+                                              如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
    --gitlab-api value                         Gitlab API (default: "api/v4")
-   --gitlab-repository value                  Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-repository value                  Gitlab 仓库。
+                                              如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
-   --github-repository value                  Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-repository value                  Github 仓库。
+                                              如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
    --help, -h                                 show help
 ```

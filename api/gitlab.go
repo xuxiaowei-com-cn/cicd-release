@@ -11,13 +11,15 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
+	"path"
 )
 
 type Link struct {
 	Name            string `json:"name"`
 	Url             string `json:"url"`
-	DirectAssetPath string `json:"direct_asset_path"`
-	LinkType        string `json:"link_type"`
+	DirectAssetPath string `json:"direct_asset_path,omitempty"`
+	LinkType        string `json:"link_type,omitempty"`
 }
 
 type Assets struct {
@@ -36,6 +38,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	var releaseName = context.String(constant.ReleaseName)
 	var releaseBody = context.String(constant.ReleaseBody)
 	var tag = context.String(constant.Tag)
+	var packageName = context.String(constant.PackageName)
 	var autoCreateTag = context.Bool(constant.AutoCreateTag)
 	var milestones = context.StringSlice(constant.Milestones)
 	var artifacts = context.StringSlice(constant.Artifacts)
@@ -77,13 +80,17 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
-	err = GitlabReleases(releaseName, releaseBody, tag, milestones,
-		baseUrl, gitlabApi, gitlabRepositoryEscape, gitlabToken)
+	genericPackagesPrefixUrl := fmt.Sprintf("%s/%s/projects/%s/packages/generic/%s/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, packageName, tag)
+	genericPackages, err := GitlabGenericPackages(genericPackagesPrefixUrl, artifacts, gitlabToken, gitlabInstance, gitlabRepository)
 	if err != nil {
 		return err
 	}
 
-	log.Printf("artifacts：%s", artifacts)
+	err = GitlabReleases(releaseName, releaseBody, tag, milestones,
+		baseUrl, gitlabApi, gitlabRepositoryEscape, gitlabToken, genericPackages)
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
@@ -134,7 +141,7 @@ func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 		// 从map中取出目标值
 		targetValue, ok := data["target"].(string)
 		if !ok {
-			log.Println("Target value not found or not a string")
+			log.Fatal("Target value not found or not a string")
 		}
 
 		sha, err := GitTagSha(tag)
@@ -194,8 +201,98 @@ func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 	}
 }
 
+func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, gitlabToken string,
+	gitlabInstance string, gitlabRepository string) (map[string]interface{}, error) {
+
+	if artifacts == nil {
+		log.Println("未设置上传的产物")
+		return nil, nil
+	}
+
+	log.Println("开始 上传产物")
+
+	packageFilePrefixUrl := fmt.Sprintf("%s/%s", gitlabInstance, gitlabRepository)
+
+	result := make(map[string]interface{})
+
+	for _, artifact := range artifacts {
+
+		fileName := path.Base(artifact)
+		fmt.Println(fileName)
+
+		genericPackagesUrl := fmt.Sprintf("%s/%s?select=package_file", genericPackagesPrefixUrl, fileName)
+		log.Printf("上传产物 %s 的 URL %s\n", artifact, genericPackagesUrl)
+
+		file, err := os.Open(artifact)
+		if err != nil {
+			fmt.Printf("Failed to open file: %s\n", err)
+			return nil, err
+		}
+		defer file.Close()
+
+		req, err := http.NewRequest(http.MethodPut, genericPackagesUrl, file)
+		if err != nil {
+			fmt.Printf("Failed to create request: %s\n", err.Error())
+			return nil, err
+		}
+		req.Header.Set("PRIVATE-TOKEN", gitlabToken)
+
+		client := &http.Client{}
+		resp, err := client.Do(req)
+		if err != nil {
+			fmt.Printf("Request failed: %s\n", err.Error())
+			return nil, err
+		}
+		defer func(Body io.ReadCloser) {
+			err := Body.Close()
+			if err != nil {
+				log.Println("Error closing response body:", err)
+
+			}
+		}(resp.Body)
+
+		body, err := io.ReadAll(resp.Body)
+		if err != nil {
+			fmt.Printf("Failed to read response body: %s\n", err.Error())
+			return nil, err
+		}
+
+		bodyStr := string(body)
+
+		if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+			var data map[string]interface{}
+			err = json.Unmarshal(body, &data)
+			if err != nil {
+				log.Println("Error unmarshal JSON:", err)
+				return nil, err
+			}
+
+			// 从map中取出目标值
+			idFloat64, ok := data["id"].(float64)
+			if !ok {
+				log.Fatal("Target value not found or not a float64")
+			}
+
+			id := int64(idFloat64)
+
+			packageFileUrl := fmt.Sprintf("%s/-/package_files/%d/download", packageFilePrefixUrl, id)
+
+			log.Printf("上传产物 %s 的 下载地址 %s\n", artifact, packageFileUrl)
+			result[fileName] = packageFileUrl
+
+		} else {
+			return nil, errors.New(fmt.Sprintf("上传产物异常：\n%s", bodyStr))
+		}
+	}
+
+	log.Println("完成 上传产物")
+
+	return result, nil
+}
+
 func GitlabReleases(releaseName string, releaseBody string, tag string, milestones []string,
-	baseUrl *url.URL, gitlabApi string, gitlabRepositoryEscape string, gitlabToken string) error {
+	baseUrl *url.URL, gitlabApi string, gitlabRepositoryEscape string, gitlabToken string,
+	genericPackages map[string]interface{}) error {
 
 	data := Data{
 		Name:        releaseName,
@@ -203,6 +300,18 @@ func GitlabReleases(releaseName string, releaseBody string, tag string, mileston
 		Description: releaseBody,
 		Milestones:  milestones,
 	}
+
+	assets := Assets{}
+	if genericPackages != nil {
+		for key, value := range genericPackages {
+			link := Link{
+				Name: key,
+				Url:  value.(string),
+			}
+			assets.Links = append(assets.Links, link)
+		}
+	}
+	data.Assets = assets
 
 	jsonData, err := json.Marshal(data)
 	if err != nil {

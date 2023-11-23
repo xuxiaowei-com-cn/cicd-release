@@ -28,6 +28,14 @@ func TagFlag(required bool) cli.Flag {
 	}
 }
 
+func PackageNameFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.PackageName,
+		Usage:    "包名，即：GitLab 产物储存 URL 前缀。\n\t只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）",
+		Required: required,
+	}
+}
+
 func AutoCreateTagFlag() cli.Flag {
 	return &cli.BoolFlag{
 		Name:  constant.AutoCreateTag,
@@ -46,7 +54,7 @@ func MilestonesFlag() cli.Flag {
 func ArtifactsFlag() cli.Flag {
 	return &cli.StringSliceFlag{
 		Name:  constant.Artifacts,
-		Usage: "发布产物",
+		Usage: "发布产物（包含路径）。\n\t可以包含多级路径。\n\t文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。",
 	}
 }
 
@@ -62,7 +70,7 @@ func GithubTokenFlag(required bool) cli.Flag {
 func GithubRepositoryFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GithubRepository,
-		Usage:    "Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
+		Usage:    "Github 仓库。\n\t如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
 		EnvVars:  []string{"GITHUB_REPOSITORY"},
 		Required: required,
 	}
@@ -79,7 +87,7 @@ func GiteeTokenFlag(required bool) cli.Flag {
 func GiteeRepositoryFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GiteeRepository,
-		Usage:    "Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
+		Usage:    "Gitee 仓库。\n\t如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
 		EnvVars:  []string{"GITEE_REPO"},
 		Required: required,
 	}
@@ -96,7 +104,7 @@ func GitlabTokenFlag(required bool) cli.Flag {
 func GitlabRepositoryFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GitlabRepository,
-		Usage:    "Gitlab 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
+		Usage:    "Gitlab 仓库。\n\t如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
 		EnvVars:  []string{"CI_PROJECT_PATH"},
 		Required: required,
 	}
@@ -138,6 +146,7 @@ func GitlabFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(),
 		TagFlag(true),
+		PackageNameFlag(true),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
 		ArtifactsFlag(),
@@ -168,6 +177,7 @@ func CommonFlag() []cli.Flag {
 		ReleaseNameFlag(false),
 		ReleaseBodyFlag(),
 		TagFlag(false),
+		PackageNameFlag(false),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
 		ArtifactsFlag(),

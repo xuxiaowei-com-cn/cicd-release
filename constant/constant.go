@@ -6,6 +6,7 @@ const (
 	ReleaseName      = "release-name"      // 发布名称
 	ReleaseBody      = "release-body"      // 发布详情
 	Tag              = "tag"               // 发布标签
+	PackageName      = "package-name"      // 包名，只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
 	Milestones       = "milestones"        // 发布里程碑
 	AutoCreateTag    = "auto-create-tag"   // 自动创建不存在的标签
 	Artifacts        = "artifacts"         // 发布产物
