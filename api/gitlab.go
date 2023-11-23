@@ -46,6 +46,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	var gitlabApi = context.String(constant.GitlabApi)
 	var gitlabRepository = context.String(constant.GitlabRepository)
 	var gitlabToken = context.String(constant.GitlabToken)
+	var gitlabExportAssetsFileName = context.String(constant.GitlabExportAssetsFileName)
 
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitLab，实例：%s，路径：%s", gitlabInstance, gitlabRepository)
@@ -81,7 +82,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	}
 
 	genericPackagesPrefixUrl := fmt.Sprintf("%s/%s/projects/%s/packages/generic/%s/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, packageName, tag)
-	genericPackages, err := GitlabGenericPackages(genericPackagesPrefixUrl, artifacts, gitlabToken, gitlabInstance, gitlabRepository)
+	genericPackages, err := GitlabGenericPackages(genericPackagesPrefixUrl, artifacts, gitlabToken, gitlabInstance, gitlabRepository, gitlabExportAssetsFileName)
 	if err != nil {
 		return err
 	}
@@ -202,7 +203,7 @@ func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 }
 
 func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, gitlabToken string,
-	gitlabInstance string, gitlabRepository string) (map[string]interface{}, error) {
+	gitlabInstance string, gitlabRepository string, gitlabExportAssetsFileName string) (map[string]interface{}, error) {
 
 	if artifacts == nil {
 		log.Println("未设置上传的产物")
@@ -286,6 +287,28 @@ func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, 
 	}
 
 	log.Println("完成 上传产物")
+
+	if gitlabExportAssetsFileName != "" {
+		jsonData, err := json.Marshal(result)
+		if err != nil {
+			log.Println("Error marshal JSON:", err)
+			return nil, err
+		}
+
+		file, err := os.Create(gitlabExportAssetsFileName)
+		if err != nil {
+			log.Printf("Create %s Error:\n%s", gitlabExportAssetsFileName, err)
+			return nil, err
+		}
+		defer file.Close()
+
+		// 将 JSON 数据写入文件
+		_, err = file.Write(jsonData)
+		if err != nil {
+			log.Printf("Write %s Error:\n%s", gitlabExportAssetsFileName, err)
+			return nil, err
+		}
+	}
 
 	return result, nil
 }

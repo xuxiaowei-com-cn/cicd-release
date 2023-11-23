@@ -127,6 +127,13 @@ func GitlabApiFlag() cli.Flag {
 	}
 }
 
+func GitlabExportAssetsNameFlag() cli.Flag {
+	return &cli.StringFlag{
+		Name:  constant.GitlabExportAssetsFileName,
+		Usage: "Gitlab 导出资源文件名称。\n\t主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）",
+	}
+}
+
 func GiteeFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
@@ -138,6 +145,7 @@ func GiteeFlag() []cli.Flag {
 
 		GiteeRepositoryFlag(true),
 		GiteeTokenFlag(true),
+		GitlabExportAssetsNameFlag(),
 	}
 }
 
@@ -155,6 +163,7 @@ func GitlabFlag() []cli.Flag {
 		GitlabApiFlag(),
 		GitlabRepositoryFlag(true),
 		GitlabTokenFlag(true),
+		GitlabExportAssetsNameFlag(),
 	}
 }
 
@@ -189,6 +198,7 @@ func CommonFlag() []cli.Flag {
 		GitlabApiFlag(),
 		GitlabRepositoryFlag(false),
 		GitlabTokenFlag(false),
+		GitlabExportAssetsNameFlag(),
 
 		GithubRepositoryFlag(false),
 		GithubTokenFlag(false),
