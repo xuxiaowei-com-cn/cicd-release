@@ -139,7 +139,7 @@ func GitlabApiFlag() cli.Flag {
 func GitlabExportAssetsNameFlag() cli.Flag {
 	return &cli.StringFlag{
 		Name:  constant.GitlabExportAssetsFileName,
-		Usage: "Gitlab 导出资源文件名称。\n\t主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）",
+		Usage: "Gitlab 导出资源文件名称。\n\t主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。\n\t导出格式为 map，键：代表文件名，值：代表下载链接",
 	}
 }
 

@@ -206,7 +206,8 @@ OPTIONS:
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
-                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）
+                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
+                                              导出格式为 map，键：代表文件名，值：代表下载链接
    --github-repository value                  Github 仓库。
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
@@ -250,7 +251,8 @@ OPTIONS:
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
-                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）
+                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
+                                              导出格式为 map，键：代表文件名，值：代表下载链接
    --github-repository value                  Github 仓库。
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
