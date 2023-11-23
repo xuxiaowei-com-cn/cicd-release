@@ -31,3 +31,12 @@ build/
 
 ### VS Code ###
 .vscode/
+
+
+/*.exe
+/*/*.exe
+/cicd-release-windows-*
+/cicd-release-linux-*
+/cicd-release-darwin-*
+
+/buildinfo/buildinfo
