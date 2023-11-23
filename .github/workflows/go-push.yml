@@ -68,6 +68,9 @@ jobs:
       - name: ls
         run: ls
 
+      - name: cat .git/config
+        run: cat .git/config
+
       - name: Release GitHub
         run: |
           ./cicd-release-linux-amd64 pre-release github --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --github-repository=$GITHUB_REPOSITORY --github-username=$GITHUB_ACTOR --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }} --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
