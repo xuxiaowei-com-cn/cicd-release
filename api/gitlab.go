@@ -117,32 +117,38 @@ func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 		return err
 	}
 
-	if "{\"message\":\"404 Tag Not Found\"}" == string(body) {
+	bodyStr := string(body)
+
+	if resp.StatusCode == 404 {
 		return nil
 	}
 
-	var data map[string]interface{}
-	err = json.Unmarshal(body, &data)
-	if err != nil {
-		log.Println("Error unmarshal JSON:", err)
-		return err
-	}
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		var data map[string]interface{}
+		err = json.Unmarshal(body, &data)
+		if err != nil {
+			log.Println("Error unmarshal JSON:", err)
+			return err
+		}
 
-	// 从map中取出目标值
-	targetValue, ok := data["target"].(string)
-	if !ok {
-		log.Println("Target value not found or not a string")
-	}
+		// 从map中取出目标值
+		targetValue, ok := data["target"].(string)
+		if !ok {
+			log.Println("Target value not found or not a string")
+		}
 
-	sha, err := GitTagSha(tag)
-	if err != nil {
-		return nil
-	}
+		sha, err := GitTagSha(tag)
+		if err != nil {
+			return nil
+		}
 
-	if sha == targetValue {
-		return nil
+		if sha == targetValue {
+			return nil
+		} else {
+			return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, sha, tag, targetValue))
+		}
 	} else {
-		return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, sha, tag, targetValue))
+		return errors.New(fmt.Sprintf("检查远端标签失败：%s", bodyStr))
 	}
 }
 
@@ -175,11 +181,17 @@ func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 		return err
 	}
 
-	if "{\"message\":\"404 Not Found\"}" == string(body) {
+	bodyStr := string(body)
+
+	if resp.StatusCode == 404 {
 		return nil
 	}
 
-	return errors.New(fmt.Sprintf("已存在此发布：\n%s", string(body)))
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		return errors.New(fmt.Sprintf("已存在此发布：\n%s", bodyStr))
+	} else {
+		return errors.New(fmt.Sprintf("检查发布失败：\n%s", bodyStr))
+	}
 }
 
 func GitlabReleases(releaseName string, releaseBody string, tag string, milestones []string,
