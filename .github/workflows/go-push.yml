@@ -30,6 +30,7 @@ jobs:
           go-version: '1.20'
 
       - name: Get Current Date
+        shell: sh
         run: |
           echo "YEAR_MONTH_DAY=$(date +'%Y-%m-%dZ')" >> $GITHUB_ENV
           echo "YEAR_MONTH_DAY_HOUR=$(date +'%Y-%m-%dT%HZ')" >> $GITHUB_ENV
