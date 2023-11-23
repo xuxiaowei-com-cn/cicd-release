@@ -47,7 +47,7 @@ func Gitee(prerelease bool, context *cli.Context) error {
 	log.Printf("发布到 Gitee，路径：%s", giteeRepository)
 
 	// 检查发布
-	err := GiteeGetReleases(giteeToken)
+	err := GiteeGetReleases(giteeRepository, giteeToken)
 	if err != nil {
 		return err
 	}
@@ -145,7 +145,7 @@ func GiteeGetTag(giteeRepository string, giteeToken string, tag string) error {
 
 // GiteeGetReleases
 // 检查发布
-func GiteeGetReleases(giteeToken string) error {
+func GiteeGetReleases(giteeRepository, giteeToken string) error {
 
 	return nil
 }
