@@ -59,34 +59,40 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 
 	gitlabRepositoryEscape := url.PathEscape(gitlabRepository)
 
+	// 检查发布
 	getReleasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
 	err = GitlabGetReleases(getReleasesUrl, gitlabToken)
 	if err != nil {
 		return err
 	}
 
+	// 自动创建标签
 	err = AutoCreateTag(tag, autoCreateTag)
 	if err != nil {
 		return err
 	}
 
+	// 检查标签
 	getTagUrl := fmt.Sprintf("%s/%s/projects/%s/repository/tags/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, tag)
 	err = GitlabGetTag(getTagUrl, gitlabToken, tag)
 	if err != nil {
 		return err
 	}
 
-	err = GitPushTag(gitlabInstance, gitlabRepository, gitlabToken, tag)
+	// 推送标签
+	err = GitPushTag(gitlabInstance, gitlabRepository, "", gitlabToken, tag)
 	if err != nil {
 		return err
 	}
 
+	// 上传产物
 	genericPackagesPrefixUrl := fmt.Sprintf("%s/%s/projects/%s/packages/generic/%s/%s", baseUrl, gitlabApi, gitlabRepositoryEscape, packageName, tag)
 	genericPackages, err := GitlabGenericPackages(genericPackagesPrefixUrl, artifacts, gitlabToken, gitlabInstance, gitlabRepository, gitlabExportAssetsFileName)
 	if err != nil {
 		return err
 	}
 
+	// 发布
 	err = GitlabReleases(releaseName, releaseBody, tag, milestones,
 		baseUrl, gitlabApi, gitlabRepositoryEscape, gitlabToken, genericPackages)
 	if err != nil {
@@ -96,10 +102,12 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	return nil
 }
 
+// GitlabGetTag
+// 检查标签
 func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", getTagUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, getTagUrl, nil)
 	if err != nil {
 		log.Println("Error creating request:", err)
 		return err
@@ -160,10 +168,12 @@ func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 	}
 }
 
+// GitlabGetReleases
+// 检查发布
 func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 
 	client := &http.Client{}
-	req, err := http.NewRequest("GET", getReleasesUrl, nil)
+	req, err := http.NewRequest(http.MethodGet, getReleasesUrl, nil)
 	if err != nil {
 		log.Println("Error creating request:", err)
 		return err
@@ -202,6 +212,65 @@ func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 	}
 }
 
+// GitlabReleases
+// 发布
+func GitlabReleases(releaseName string, releaseBody string, tag string, milestones []string,
+	baseUrl *url.URL, gitlabApi string, gitlabRepositoryEscape string, gitlabToken string,
+	genericPackages map[string]interface{}) error {
+
+	data := Data{
+		Name:        releaseName,
+		TagName:     tag,
+		Description: releaseBody,
+		Milestones:  milestones,
+	}
+
+	assets := Assets{}
+	if genericPackages != nil {
+		for key, value := range genericPackages {
+			link := Link{
+				Name: key,
+				Url:  value.(string),
+			}
+			assets.Links = append(assets.Links, link)
+		}
+	}
+	data.Assets = assets
+
+	jsonData, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Error marshaling JSON:", err)
+		return err
+	}
+
+	releasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases", baseUrl, gitlabApi, gitlabRepositoryEscape)
+	req, err := http.NewRequest(http.MethodPost, releasesUrl, bytes.NewBuffer(jsonData))
+	if err != nil {
+		log.Println("Error creating request:", err)
+		return err
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
+
+	client := http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		log.Println("Error sending request:", err)
+		return err
+	}
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			log.Println("Error closing response body:", err)
+		}
+	}(resp.Body)
+
+	log.Println("Response status:", resp.Status)
+
+	return nil
+}
+
 func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, gitlabToken string,
 	gitlabInstance string, gitlabRepository string, gitlabExportAssetsFileName string) (map[string]interface{}, error) {
 
@@ -233,7 +302,7 @@ func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, 
 
 		req, err := http.NewRequest(http.MethodPut, genericPackagesUrl, file)
 		if err != nil {
-			fmt.Printf("Failed to create request: %s\n", err.Error())
+			log.Printf("Failed to create request: %s", err)
 			return nil, err
 		}
 		req.Header.Set("PRIVATE-TOKEN", gitlabToken)
@@ -241,7 +310,7 @@ func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, 
 		client := &http.Client{}
 		resp, err := client.Do(req)
 		if err != nil {
-			fmt.Printf("Request failed: %s\n", err.Error())
+			log.Printf("Request failed: %s", err)
 			return nil, err
 		}
 		defer func(Body io.ReadCloser) {
@@ -254,7 +323,7 @@ func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, 
 
 		body, err := io.ReadAll(resp.Body)
 		if err != nil {
-			fmt.Printf("Failed to read response body: %s\n", err.Error())
+			log.Printf("Failed to read response body: %s", err)
 			return nil, err
 		}
 
@@ -311,61 +380,4 @@ func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, 
 	}
 
 	return result, nil
-}
-
-func GitlabReleases(releaseName string, releaseBody string, tag string, milestones []string,
-	baseUrl *url.URL, gitlabApi string, gitlabRepositoryEscape string, gitlabToken string,
-	genericPackages map[string]interface{}) error {
-
-	data := Data{
-		Name:        releaseName,
-		TagName:     tag,
-		Description: releaseBody,
-		Milestones:  milestones,
-	}
-
-	assets := Assets{}
-	if genericPackages != nil {
-		for key, value := range genericPackages {
-			link := Link{
-				Name: key,
-				Url:  value.(string),
-			}
-			assets.Links = append(assets.Links, link)
-		}
-	}
-	data.Assets = assets
-
-	jsonData, err := json.Marshal(data)
-	if err != nil {
-		log.Println("Error marshaling JSON:", err)
-		return err
-	}
-
-	releasesUrl := fmt.Sprintf("%s/%s/projects/%s/releases", baseUrl, gitlabApi, gitlabRepositoryEscape)
-	req, err := http.NewRequest("POST", releasesUrl, bytes.NewBuffer(jsonData))
-	if err != nil {
-		log.Println("Error creating request:", err)
-		return err
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
-
-	client := http.Client{}
-	resp, err := client.Do(req)
-	if err != nil {
-		log.Println("Error sending request:", err)
-		return err
-	}
-	defer func(Body io.ReadCloser) {
-		err := Body.Close()
-		if err != nil {
-			log.Println("Error closing response body:", err)
-		}
-	}(resp.Body)
-
-	log.Println("Response status:", resp.Status)
-
-	return nil
 }

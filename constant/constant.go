@@ -12,6 +12,7 @@ const (
 	Artifacts                  = "artifacts"                      // 发布产物
 	GithubToken                = "github-token"                   // Github Token
 	GithubRepository           = "github-repository"              // Github 仓库，如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
+	GiteeUsername              = "gitee-username"                 // Gitee 用户名
 	GiteeToken                 = "gitee-token"                    // Gitee Token
 	GiteeRepository            = "gitee-repository"               // Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
 	GitlabToken                = "gitlab-token"                   // Gitlab Token

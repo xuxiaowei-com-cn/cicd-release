@@ -13,10 +13,11 @@ func ReleaseNameFlag(required bool) cli.Flag {
 	}
 }
 
-func ReleaseBodyFlag() cli.Flag {
+func ReleaseBodyFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
-		Name:  constant.ReleaseBody,
-		Usage: "发布详情",
+		Name:     constant.ReleaseBody,
+		Usage:    "发布详情",
+		Required: required,
 	}
 }
 
@@ -72,6 +73,14 @@ func GithubRepositoryFlag(required bool) cli.Flag {
 		Name:     constant.GithubRepository,
 		Usage:    "Github 仓库。\n\t如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
 		EnvVars:  []string{"GITHUB_REPOSITORY"},
+		Required: required,
+	}
+}
+
+func GiteeUsername(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GiteeUsername,
+		Usage:    "Gitee 用户名",
 		Required: required,
 	}
 }
@@ -137,22 +146,21 @@ func GitlabExportAssetsNameFlag() cli.Flag {
 func GiteeFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
-		ReleaseBodyFlag(),
+		ReleaseBodyFlag(true),
 		TagFlag(true),
 		AutoCreateTagFlag(),
-		MilestonesFlag(),
-		ArtifactsFlag(),
+		GitlabExportAssetsNameFlag(),
 
 		GiteeRepositoryFlag(true),
+		GiteeUsername(true),
 		GiteeTokenFlag(true),
-		GitlabExportAssetsNameFlag(),
 	}
 }
 
 func GitlabFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
-		ReleaseBodyFlag(),
+		ReleaseBodyFlag(false),
 		TagFlag(true),
 		PackageNameFlag(true),
 		AutoCreateTagFlag(),
@@ -170,7 +178,7 @@ func GitlabFlag() []cli.Flag {
 func GithubFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
-		ReleaseBodyFlag(),
+		ReleaseBodyFlag(false),
 		TagFlag(true),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
@@ -184,7 +192,7 @@ func GithubFlag() []cli.Flag {
 func CommonFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(false),
-		ReleaseBodyFlag(),
+		ReleaseBodyFlag(false),
 		TagFlag(false),
 		PackageNameFlag(false),
 		AutoCreateTagFlag(),
@@ -192,6 +200,7 @@ func CommonFlag() []cli.Flag {
 		ArtifactsFlag(),
 
 		GiteeRepositoryFlag(false),
+		GiteeUsername(false),
 		GiteeTokenFlag(false),
 
 		GitlabInstanceFlag(),

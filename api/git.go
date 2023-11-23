@@ -47,7 +47,7 @@ func GitVersion() (string, error) {
 }
 
 // GitPushTag 推送标签
-func GitPushTag(instance string, repository string, token, tag string) error {
+func GitPushTag(instance string, repository string, username, token, tag string) error {
 
 	origin := LowerCaseRandomString(6)
 
@@ -57,7 +57,7 @@ func GitPushTag(instance string, repository string, token, tag string) error {
 		return err
 	}
 
-	instanceUrl.User = url.UserPassword("", token)
+	instanceUrl.User = url.UserPassword(username, token)
 	urlUserStr := fmt.Sprintf("%s/%s%s", instanceUrl, repository, ".git")
 	urlStr := fmt.Sprintf("%s/%s%s", instance, repository, ".git")
 

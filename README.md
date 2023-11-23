@@ -198,6 +198,7 @@ OPTIONS:
                                               文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。
    --gitee-repository value                   Gitee 仓库。
                                               如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-username value                     Gitee 用户名
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
    --gitlab-api value                         Gitlab API (default: "api/v4")
@@ -241,6 +242,7 @@ OPTIONS:
                                               文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。
    --gitee-repository value                   Gitee 仓库。
                                               如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITEE_REPO%]
+   --gitee-username value                     Gitee 用户名
    --gitee-token value                        Gitee Token
    --gitlab-instance value                    Gitlab 实例（协议 + 域名） (default: "https://gitlab.com") [%CI_SERVER_URL%]
    --gitlab-api value                         Gitlab API (default: "api/v4")
@@ -319,3 +321,7 @@ go build
     1. [发布 API](https://docs.gitlab.cn/jh/api/releases/)
     2. [标签 API](https://docs.gitlab.cn/jh/api/tags)
     3. [通用软件包存储库](https://docs.gitlab.cn/jh/user/packages/generic_packages/)
+- Gitee API 文档
+    1. [获取仓库的单个Releases](https://gitee.com/api/v5/swagger#/getV5ReposOwnerRepoReleasesId)
+    2. [创建仓库Release](https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoReleases)
+    3. [列出仓库所有的tags](https://gitee.com/api/v5/swagger#/getV5ReposOwnerRepoTags)
