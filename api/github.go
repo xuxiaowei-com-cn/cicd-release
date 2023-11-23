@@ -58,6 +58,10 @@ func Github(prerelease bool, context *cli.Context) error {
 		return err
 	}
 
+	// 用于判断是否处于 GitHub Actions 环境
+	githubSha := os.Getenv("GITHUB_SHA")
+	log.Printf("GITHUB_SHA：%s", githubSha)
+
 	// 推送标签
 	err = GitPushTag("https://github.com", githubRepository, githubUsername, githubToken, tag)
 	if err != nil {
