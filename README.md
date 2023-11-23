@@ -327,3 +327,8 @@ go build
     1. [获取仓库的单个Releases](https://gitee.com/api/v5/swagger#/getV5ReposOwnerRepoReleasesId)
     2. [创建仓库Release](https://gitee.com/api/v5/swagger#/postV5ReposOwnerRepoReleases)
     3. [列出仓库所有的tags](https://gitee.com/api/v5/swagger#/getV5ReposOwnerRepoTags)
+- GitHub API 文档
+    1. [Create a release](https://docs.github.com/zh/rest/releases/releases#create-a-release)
+    2. [Get a release](https://docs.github.com/zh/rest/releases/releases#get-a-release)
+    3. [List tag protection states for a repository](https://docs.github.com/zh/rest/repos/tags#list-tag-protection-states-for-a-repository)
+    4. [Upload a release asset](https://docs.github.com/zh/rest/releases/assets#upload-a-release-asset)
