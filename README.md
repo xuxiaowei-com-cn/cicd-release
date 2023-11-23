@@ -294,3 +294,10 @@ go build
         go build -o buildinfo/buildinfo buildinfo/buildinfo.go
         GOOS=darwin GOARCH=arm64 go build -v -ldflags "-s -w -buildid= -X main.BuildDate=$(buildinfo/buildinfo now) -X main.Compiler= -X main.GitCommitBranch=$(buildinfo/buildinfo commitBranch) -X main.GitCommitSha=$(buildinfo/buildinfo commitSha) -X main.GitCommitShortSha=$(buildinfo/buildinfo commitShortSha) -X main.GitCommitTag=$(buildinfo/buildinfo commitTag) -X main.GitCommitTimestamp=$(buildinfo/buildinfo commitTimestamp) -X main.GitTreeState=$(buildinfo/buildinfo git-tree-state) -X main.GitVersion=$(buildinfo/buildinfo commitTag) -X main.GoVersion=$(buildinfo/buildinfo goShortVersion) -X main.Major= -X main.Minor= -X main.Revision= -X main.Platform=darwin/arm64 -X main.CiPipelineId= -X main.CiJobId=" -trimpath -o cicd-release-darwin-arm64 .
         ```
+
+## 文档
+
+- GitLab API 文档
+    1. [发布 API](https://docs.gitlab.cn/jh/api/releases/)
+    2. [标签 API](https://docs.gitlab.cn/jh/api/tags)
+    3. [通用软件包存储库](https://docs.gitlab.cn/jh/user/packages/generic_packages/)
