@@ -38,6 +38,7 @@ func Github(prerelease bool, context *cli.Context) error {
 
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitHub，路径：%s", githubRepository)
+	log.Printf("操作 GitHub 的用于名：%s", githubUsername)
 
 	// 检查发布
 	err := GithubGetReleases(githubRepository, githubToken)
