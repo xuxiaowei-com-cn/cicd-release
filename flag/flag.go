@@ -29,6 +29,14 @@ func TagFlag(required bool) cli.Flag {
 	}
 }
 
+func DraftFlag() cli.Flag {
+	return &cli.BoolFlag{
+		Name:  constant.Draft,
+		Usage: "Github 草稿",
+		Value: false,
+	}
+}
+
 func PackageNameFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.PackageName,
@@ -56,6 +64,15 @@ func ArtifactsFlag() cli.Flag {
 	return &cli.StringSliceFlag{
 		Name:  constant.Artifacts,
 		Usage: "发布产物（包含路径）。\n\t可以包含多级路径。\n\t文件名（除路径外，所有文件名均不能出现重复）：只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）。",
+	}
+}
+
+func GithubUsernameFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GithubUsername,
+		Usage:    "Github 用户名",
+		EnvVars:  []string{"GITHUB_ACTOR"},
+		Required: required,
 	}
 }
 
@@ -180,11 +197,12 @@ func GithubFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(false),
 		TagFlag(true),
+		DraftFlag(),
 		AutoCreateTagFlag(),
-		MilestonesFlag(),
 		ArtifactsFlag(),
 
 		GithubRepositoryFlag(true),
+		GithubUsernameFlag(true),
 		GithubTokenFlag(true),
 	}
 }
@@ -194,6 +212,7 @@ func CommonFlag() []cli.Flag {
 		ReleaseNameFlag(false),
 		ReleaseBodyFlag(false),
 		TagFlag(false),
+		DraftFlag(),
 		PackageNameFlag(false),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
@@ -210,6 +229,7 @@ func CommonFlag() []cli.Flag {
 		GitlabExportAssetsNameFlag(),
 
 		GithubRepositoryFlag(false),
+		GithubUsernameFlag(false),
 		GithubTokenFlag(false),
 	}
 }
