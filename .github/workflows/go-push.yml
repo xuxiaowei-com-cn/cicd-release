@@ -73,4 +73,4 @@ jobs:
 
       - name: Release GitHub
         run: |
-          ./cicd-release-linux-amd64 pre-release github --release-name=release-name --tag=v0.0.11 --auto-create-tag --github-repository=xuxiaowei-com-cn/cicd-release --artifacts=gitmoji.md --github-username=xuxiaowei-com-cn --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }}
+          ./cicd-release-linux-amd64 pre-release github --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --github-repository=$GITHUB_REPOSITORY --github-username=$GITHUB_ACTOR --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }} --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
