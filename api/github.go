@@ -133,7 +133,7 @@ func GithubGetTag(githubRepository string, githubToken string, tag string) error
 		}
 
 	} else {
-		return errors.New(fmt.Sprintf("检查 GitHub 标签异常：\n%s", bodyStr))
+		return errors.New(fmt.Sprintf("检查 GitHub 标签异常（%d）：\n%s", resp.StatusCode, bodyStr))
 	}
 
 	return nil
