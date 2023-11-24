@@ -191,7 +191,7 @@ OPTIONS:
    --tag value                                发布标签
    --draft                                    Github 草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
-                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
+                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_） (default: "cicd-release")
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
    --milestones value [ --milestones value ]  发布里程碑
    --artifacts value [ --artifacts value ]    发布产物（包含路径）。
@@ -239,7 +239,7 @@ OPTIONS:
    --tag value                                发布标签
    --draft                                    Github 草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
-                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
+                                              只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_） (default: "cicd-release")
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
    --milestones value [ --milestones value ]  发布里程碑
    --artifacts value [ --artifacts value ]    发布产物（包含路径）。

@@ -37,11 +37,11 @@ func DraftFlag() cli.Flag {
 	}
 }
 
-func PackageNameFlag(required bool) cli.Flag {
+func PackageNameFlag() cli.Flag {
 	return &cli.StringFlag{
-		Name:     constant.PackageName,
-		Usage:    "包名，即：GitLab 产物储存 URL 前缀。\n\t只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）",
-		Required: required,
+		Name:  constant.PackageName,
+		Usage: "包名，即：GitLab 产物储存 URL 前缀。\n\t只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）",
+		Value: "cicd-release",
 	}
 }
 
@@ -188,7 +188,7 @@ func GitlabFlag() []cli.Flag {
 		ReleaseNameFlag(true),
 		ReleaseBodyFlag(false),
 		TagFlag(true),
-		PackageNameFlag(true),
+		PackageNameFlag(),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
 		ArtifactsFlag(),
@@ -223,7 +223,7 @@ func CommonFlag() []cli.Flag {
 		ReleaseBodyFlag(false),
 		TagFlag(false),
 		DraftFlag(),
-		PackageNameFlag(false),
+		PackageNameFlag(),
 		AutoCreateTagFlag(),
 		MilestonesFlag(),
 		ArtifactsFlag(),
