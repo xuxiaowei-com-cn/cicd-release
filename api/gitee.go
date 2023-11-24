@@ -229,12 +229,11 @@ func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, 
 
 	bodyStr := string(body)
 
-	if resp.StatusCode == 404 {
-		return nil
-	}
+	log.Println("Response status:", resp.Status)
 
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
-		return errors.New(fmt.Sprintf("已存在此发布：\n%s", bodyStr))
+		log.Printf("Gitee 发布结果：\n%s", bodyStr)
+		return nil
 	} else {
 		return errors.New(fmt.Sprintf("检查发布失败：\n%s", bodyStr))
 	}
