@@ -60,12 +60,17 @@ func Github(prerelease bool, context *cli.Context) error {
 
 	// 用于判断是否处于 GitHub Actions 环境
 	githubSha := os.Getenv("GITHUB_SHA")
-	log.Printf("GITHUB_SHA：%s", githubSha)
-
-	// 推送标签
-	err = GitPushTag("https://github.com", githubRepository, githubUsername, githubToken, tag)
-	if err != nil {
-		return err
+	if githubSha != "" {
+		log.Printf("GITHUB_SHA：%s", githubSha)
+		log.Printf("在 GitHub Actions 环境 中发布，无需推送 Git 标签（当前工作区的代码，已存在于 GitHub 仓库中）")
+	} else {
+		log.Printf("使用 Git 推送标签 开始")
+		// 推送标签
+		err = GitPushTag("https://github.com", githubRepository, githubUsername, githubToken, tag)
+		if err != nil {
+			return err
+		}
+		log.Printf("使用 Git 推送标签 结束")
 	}
 
 	// 发布
