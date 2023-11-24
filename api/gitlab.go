@@ -45,6 +45,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	var gitlabInstance = context.String(constant.GitlabInstance)
 	var gitlabApi = context.String(constant.GitlabApi)
 	var gitlabRepository = context.String(constant.GitlabRepository)
+	var gitlabUsername = context.String(constant.GitlabUsername)
 	var gitlabToken = context.String(constant.GitlabToken)
 	var gitlabExportAssetsFileName = context.String(constant.GitlabExportAssetsFileName)
 
@@ -80,7 +81,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	}
 
 	// 推送标签
-	err = GitPushTag(gitlabInstance, gitlabRepository, "", gitlabToken, tag)
+	err = GitPushTag(gitlabInstance, gitlabRepository, gitlabUsername, gitlabToken, tag)
 	if err != nil {
 		return err
 	}

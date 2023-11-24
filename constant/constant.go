@@ -17,6 +17,7 @@ const (
 	GiteeUsername              = "gitee-username"                 // Gitee 用户名
 	GiteeToken                 = "gitee-token"                    // Gitee Token
 	GiteeRepository            = "gitee-repository"               // Gitee 仓库，如：https://gitee.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
+	GitlabUsername             = "gitlab-username"                // Gitlab 用户名
 	GitlabToken                = "gitlab-token"                   // Gitlab Token
 	GitlabInstance             = "gitlab-instance"                // Gitlab 实例（协议 + 域名）
 	GitlabApi                  = "gitlab-api"                     // Gitlab API

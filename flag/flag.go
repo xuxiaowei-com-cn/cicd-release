@@ -119,6 +119,14 @@ func GiteeRepositoryFlag(required bool) cli.Flag {
 	}
 }
 
+func GitlabUsernameFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GitlabUsername,
+		Usage:    "Gitlab 用户名",
+		Required: required,
+	}
+}
+
 func GitlabTokenFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GitlabToken,
@@ -187,6 +195,7 @@ func GitlabFlag() []cli.Flag {
 		GitlabInstanceFlag(),
 		GitlabApiFlag(),
 		GitlabRepositoryFlag(true),
+		GitlabUsernameFlag(true),
 		GitlabTokenFlag(true),
 		GitlabExportAssetsNameFlag(),
 	}
@@ -225,6 +234,7 @@ func CommonFlag() []cli.Flag {
 		GitlabInstanceFlag(),
 		GitlabApiFlag(),
 		GitlabRepositoryFlag(false),
+		GitlabUsernameFlag(false),
 		GitlabTokenFlag(false),
 		GitlabExportAssetsNameFlag(),
 

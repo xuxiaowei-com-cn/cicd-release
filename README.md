@@ -189,6 +189,7 @@ OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
+   --draft                                    Github 草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
                                               只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
@@ -204,12 +205,14 @@ OPTIONS:
    --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库。
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-username value                    Gitlab 用户名
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
                                               主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
                                               导出格式为 map，键：代表文件名，值：代表下载链接
    --github-repository value                  Github 仓库。
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-username value                    Github 用户名 [%GITHUB_ACTOR%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
    --help, -h                                 show help
 ```
@@ -234,6 +237,7 @@ OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
+   --draft                                    Github 草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
                                               只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_）
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
@@ -249,12 +253,14 @@ OPTIONS:
    --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库。
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
+   --gitlab-username value                    Gitlab 用户名
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
                                               主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
                                               导出格式为 map，键：代表文件名，值：代表下载链接
    --github-repository value                  Github 仓库。
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
+   --github-username value                    Github 用户名 [%GITHUB_ACTOR%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
    --help, -h                                 show help
 ```
