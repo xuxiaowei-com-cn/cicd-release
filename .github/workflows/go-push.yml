@@ -77,13 +77,6 @@ jobs:
         run: |
           ./cicd-release-linux-amd64 pre-release github --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --github-repository=$GITHUB_REPOSITORY --github-username=$GITHUB_ACTOR --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
 
-      - name: Push GitLab Tag
-        run: |
-          git config --global user.email "xuxiaowei@xuxiaowei.com.cn"
-          git config --global user.name "徐晓伟"
-          git remote add gitlab https://xuxiaowei-com-cn:${{ secrets.PRIVATE_GITLAB_TOKEN }}@gitlab.com/$GITHUB_REPOSITORY.git
-          git push gitlab v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }}
-
       - name: Release GitLab
         run: |
           ./cicd-release-linux-amd64 pre-release gitlab --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitlab-repository=$GITHUB_REPOSITORY --gitlab-token=${{ secrets.PRIVATE_GITLAB_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --package-name=cicd-release --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
