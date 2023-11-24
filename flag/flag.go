@@ -123,6 +123,7 @@ func GitlabUsernameFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GitlabUsername,
 		Usage:    "Gitlab 用户名",
+		EnvVars:  []string{"GITLAB_USER_LOGIN"},
 		Required: required,
 	}
 }

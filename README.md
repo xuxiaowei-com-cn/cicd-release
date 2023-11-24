@@ -205,7 +205,7 @@ OPTIONS:
    --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库。
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
-   --gitlab-username value                    Gitlab 用户名
+   --gitlab-username value                    Gitlab 用户名 [%GITLAB_USER_LOGIN%]
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
                                               主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
@@ -253,7 +253,7 @@ OPTIONS:
    --gitlab-api value                         Gitlab API (default: "api/v4")
    --gitlab-repository value                  Gitlab 仓库。
                                               如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%CI_PROJECT_PATH%]
-   --gitlab-username value                    Gitlab 用户名
+   --gitlab-username value                    Gitlab 用户名 [%GITLAB_USER_LOGIN%]
    --gitlab-token value                       Gitlab Token
    --gitlab-export-assets-file-name value     Gitlab 导出资源文件名称。
                                               主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
