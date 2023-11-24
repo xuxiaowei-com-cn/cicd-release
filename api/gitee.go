@@ -95,7 +95,7 @@ func GiteeGetTag(giteeRepository string, giteeToken string, tag string) error {
 
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Printf("Request failed: %s", err)
+		log.Println("Error sending request:", err)
 		return err
 	}
 	defer func(Body io.ReadCloser) {
@@ -107,11 +107,15 @@ func GiteeGetTag(giteeRepository string, giteeToken string, tag string) error {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		log.Printf("Failed to read response body: %s\n", err)
+		log.Println("Error reading response:", err)
 		return err
 	}
 
 	bodyStr := string(body)
+
+	if resp.StatusCode == 404 {
+		return nil
+	}
 
 	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
 		var tags []Tag
@@ -136,11 +140,10 @@ func GiteeGetTag(giteeRepository string, giteeToken string, tag string) error {
 			}
 		}
 
+		return nil
 	} else {
-		return errors.New(fmt.Sprintf("检查 Gitee 标签异常：\n%s", bodyStr))
+		return errors.New(fmt.Sprintf("检查 Gitee 远端标签异常：\n%s", bodyStr))
 	}
-
-	return nil
 }
 
 // GiteeGetReleases

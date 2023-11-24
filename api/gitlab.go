@@ -107,7 +107,6 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 // 检查标签
 func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 
-	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodGet, getTagUrl, nil)
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -115,6 +114,8 @@ func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 	}
 
 	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
+
+	client := &http.Client{}
 
 	resp, err := client.Do(req)
 	if err != nil {
@@ -164,8 +165,9 @@ func GitlabGetTag(getTagUrl string, gitlabToken string, tag string) error {
 		} else {
 			return errors.New(fmt.Sprintf("本地标签 %s（%s） 和 远端 标签 %s（%s） 对应 SHA 不同，请检查！", tag, sha, tag, targetValue))
 		}
+
 	} else {
-		return errors.New(fmt.Sprintf("检查远端标签失败：%s", bodyStr))
+		return errors.New(fmt.Sprintf("检查 GitLab 远端标签异常：\n%s", bodyStr))
 	}
 }
 
