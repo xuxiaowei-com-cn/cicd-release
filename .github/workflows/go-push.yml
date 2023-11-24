@@ -25,9 +25,9 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-
-      - name: Fetch All History
-        run: git fetch --unshallow
+        with:
+          # 获取所有的代码历史记录，包括分支和标签
+          fetch-depth: 0
 
       - name: Set up Go
         uses: actions/setup-go@v4
