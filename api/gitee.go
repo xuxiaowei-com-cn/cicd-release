@@ -200,7 +200,6 @@ func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, 
 		return err
 	}
 
-	client := &http.Client{}
 	req, err := http.NewRequest(http.MethodPost, url, bytes.NewBuffer(jsonData))
 	if err != nil {
 		log.Println("Error creating request:", err)
@@ -209,6 +208,7 @@ func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, 
 
 	req.Header.Set("Content-Type", "application/json")
 
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Error sending request:", err)
@@ -235,6 +235,6 @@ func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, 
 		log.Printf("Gitee 发布结果：\n%s", bodyStr)
 		return nil
 	} else {
-		return errors.New(fmt.Sprintf("检查发布失败：\n%s", bodyStr))
+		return errors.New(fmt.Sprintf("Gitee 发布失败：\n%s", bodyStr))
 	}
 }

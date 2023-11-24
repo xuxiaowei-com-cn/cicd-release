@@ -254,7 +254,7 @@ func GitlabReleases(releaseName string, releaseBody string, tag string, mileston
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("PRIVATE-TOKEN", gitlabToken)
 
-	client := http.Client{}
+	client := &http.Client{}
 	resp, err := client.Do(req)
 	if err != nil {
 		log.Println("Error sending request:", err)
@@ -267,9 +267,22 @@ func GitlabReleases(releaseName string, releaseBody string, tag string, mileston
 		}
 	}(resp.Body)
 
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		log.Println("Error reading response:", err)
+		return err
+	}
+
+	bodyStr := string(body)
+
 	log.Println("Response status:", resp.Status)
 
-	return nil
+	if resp.StatusCode >= 200 && resp.StatusCode < 300 {
+		log.Printf("GitLab 发布结果：\n%s", bodyStr)
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf("GitLab 发布失败：\n%s", bodyStr))
+	}
 }
 
 func GitlabGenericPackages(genericPackagesPrefixUrl string, artifacts []string, gitlabToken string,
