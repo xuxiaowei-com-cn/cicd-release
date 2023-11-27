@@ -18,6 +18,12 @@ jobs:
       CGO_ENABLED: 0
       RELEASE_BODY: 自动化发布
 
+    outputs:
+      YEAR_MONTH_DAY: ${{ steps.set_current_date_output.outputs.YEAR_MONTH_DAY }}
+      YEAR_MONTH_DAY_HOUR: ${{ steps.set_current_date_output.outputs.YEAR_MONTH_DAY_HOUR }}
+      YEAR_MONTH_DAY_HOUR_MINUTE: ${{ steps.set_current_date_output.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }}
+      RELEASE_BODY: ${{ env.RELEASE_BODY }}
+
     strategy:
       matrix:
         os: [ "ubuntu-latest" ]
@@ -45,6 +51,13 @@ jobs:
           echo ${{ env.YEAR_MONTH_DAY }}
           echo ${{ env.YEAR_MONTH_DAY_HOUR }}
           echo ${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }}
+
+      - name: Set Current Date OUTPUT
+        id: set_current_date_output
+        run: |
+          echo "YEAR_MONTH_DAY=${{ env.YEAR_MONTH_DAY }}" >> $GITHUB_OUTPUT
+          echo "YEAR_MONTH_DAY_HOUR=${{ env.YEAR_MONTH_DAY_HOUR }}" >> $GITHUB_OUTPUT
+          echo "YEAR_MONTH_DAY_HOUR_MINUTE=${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }}" >> $GITHUB_OUTPUT
 
       - name: Go Version
         run: go version
@@ -76,18 +89,88 @@ jobs:
       - name: ls
         run: ls
 
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cicd-release
+          path: |
+            cicd-release-windows-amd64.exe
+            cicd-release-windows-arm64.exe
+            cicd-release-linux-amd64
+            cicd-release-linux-arm64
+            cicd-release-darwin-amd64
+            cicd-release-darwin-arm64
+
+
+  release-github:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: cicd-release
+          path: .
+
       - name: Release GitHub
         run: |
-          ./cicd-release-linux-amd64 pre-release github --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --github-repository=$GITHUB_REPOSITORY --github-username=$GITHUB_ACTOR --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
+          ./cicd-release-linux-amd64 pre-release github --release-name=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --github-repository=$GITHUB_REPOSITORY --github-username=$GITHUB_ACTOR --github-token=${{ secrets.PRIVATE_GITHUB_TOKEN }} --release-body=${{ needs.build.outputs.RELEASE_BODY }} --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
+
+  release-gitlab:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: cicd-release
+          path: .
 
       - name: Release GitLab
         run: |
-          ./cicd-release-linux-amd64 pre-release gitlab --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitlab-repository=$GITHUB_REPOSITORY --gitlab-username=$GITHUB_ACTOR --gitlab-token=${{ secrets.PRIVATE_GITLAB_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --package-name=cicd-release --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
+          ./cicd-release-linux-amd64 pre-release gitlab --release-name=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitlab-repository=$GITHUB_REPOSITORY --gitlab-username=$GITHUB_ACTOR --gitlab-token=${{ secrets.PRIVATE_GITLAB_TOKEN }} --release-body=${{ needs.build.outputs.RELEASE_BODY }} --package-name=cicd-release --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64
+
+  release-jihulab:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: cicd-release
+          path: .
 
       - name: Release JiHuLab
         run: |
-          ./cicd-release-linux-amd64 pre-release gitlab --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitlab-repository=$GITHUB_REPOSITORY --gitlab-username=$GITHUB_ACTOR --gitlab-token=${{ secrets.PRIVATE_JIHULAB_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --package-name=cicd-release --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64 --gitlab-instance=https://jihulab.com --gitlab-export-assets-file-name=cicd-release-assets.json
+          ./cicd-release-linux-amd64 pre-release gitlab --release-name=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitlab-repository=$GITHUB_REPOSITORY --gitlab-username=$GITHUB_ACTOR --gitlab-token=${{ secrets.PRIVATE_JIHULAB_TOKEN }} --release-body=${{ needs.build.outputs.RELEASE_BODY }} --package-name=cicd-release --artifacts=cicd-release-windows-amd64.exe --artifacts=cicd-release-windows-arm64.exe --artifacts=cicd-release-linux-amd64 --artifacts=cicd-release-linux-arm64 --artifacts=cicd-release-darwin-amd64 --artifacts=cicd-release-darwin-arm64 --gitlab-instance=https://jihulab.com --gitlab-export-assets-file-name=cicd-release-assets.json
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: cicd-release-assets
+          path: |
+            cicd-release-assets.json
+
+  release-gitee:
+    needs: release-jihulab
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v3
+        with:
+          name: cicd-release
+          path: .
+
+      - name: Download Artifacts（cicd-release-assets.json）
+        uses: actions/download-artifact@v3
+        with:
+          name: cicd-release-assets
+          path: .
 
       - name: Release Gitee
         run: |
-          ./cicd-release-linux-amd64 pre-release gitee --release-name=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ env.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitee-repository=$GITHUB_REPOSITORY --gitee-username=$GITHUB_ACTOR --gitee-token=${{ secrets.PRIVATE_GITEE_TOKEN }} --release-body=${{ env.RELEASE_BODY }} --gitlab-export-assets-file-name=cicd-release-assets.json
+          ./cicd-release-linux-amd64 pre-release gitee --release-name=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --tag=v0.0.0-${{ needs.build.outputs.YEAR_MONTH_DAY_HOUR_MINUTE }} --auto-create-tag --gitee-repository=$GITHUB_REPOSITORY --gitee-username=$GITHUB_ACTOR --gitee-token=${{ secrets.PRIVATE_GITEE_TOKEN }} --release-body=${{ needs.build.outputs.RELEASE_BODY }} --gitlab-export-assets-file-name=cicd-release-assets.json
