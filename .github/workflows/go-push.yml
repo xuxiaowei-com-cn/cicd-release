@@ -86,8 +86,8 @@ jobs:
           ./cicd-release-linux-amd64 --version
           ./cicd-release-linux-amd64
 
-      - name: ls
-        run: ls
+      - name: ls -l
+        run: ls -l
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -107,6 +107,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 获取所有的代码历史记录，包括分支和标签
+          fetch-depth: 0
+
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
@@ -131,6 +137,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 获取所有的代码历史记录，包括分支和标签
+          fetch-depth: 0
+
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
@@ -155,6 +167,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 获取所有的代码历史记录，包括分支和标签
+          fetch-depth: 0
+
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
@@ -186,6 +204,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          # 获取所有的代码历史记录，包括分支和标签
+          fetch-depth: 0
+
       - name: Download Artifacts
         uses: actions/download-artifact@v3
         with:
