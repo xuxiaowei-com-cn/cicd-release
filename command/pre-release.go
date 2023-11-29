@@ -44,6 +44,15 @@ func PreReleaseCommand() *cli.Command {
 					return api.Github(true, context)
 				},
 			},
+			{
+				Name:  "gitlink",
+				Usage: "GitLink 预发布",
+				Flags: flag.GitlinkFlag(),
+				Action: func(context *cli.Context) error {
+
+					return api.Gitlink(true, context)
+				},
+			},
 		},
 	}
 }

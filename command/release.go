@@ -44,6 +44,15 @@ func ReleaseCommand() *cli.Command {
 					return api.Github(false, context)
 				},
 			},
+			{
+				Name:  "gitlink",
+				Usage: "GitLink 发布",
+				Flags: flag.GitlinkFlag(),
+				Action: func(context *cli.Context) error {
+
+					return api.Gitlink(true, context)
+				},
+			},
 		},
 	}
 }

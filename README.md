@@ -125,7 +125,7 @@
 3. 一键发布到 gitee，由于 gitee 暂不支持提供上传产物的 API 接口，
    本工具支持提供 json 文件（map 形式，键：代表文件名，值：代表下载链接）作为产物，本项目使用 [极狐](https://jihulab.com) 作为
    gitee 产物链接
-4. 一键发布到 gitlink，可包含产物上传（开发中...）
+4. 一键发布到 gitlink，可包含产物上传（需要等到官方开发 token 功能，或者联系官方人员申请 token 才能使用）
 
 ## 开发命令
 
@@ -133,9 +133,11 @@
 
 ```shell
 go env -w GOPROXY=https://goproxy.cn,direct
-# go env -w GOPROXY=https://mirrors.aliyun.com/goproxy/
+# go env -w GOPROXY=https://proxy.golang.org,direct
+# go env -w GOPROXY=https://mirrors.aliyun.com/goproxy,direct
 go get -u github.com/urfave/cli/v2
 go get -u github.com/xuxiaowei-com-cn/git-go@main
+go get -u github.com/xuxiaowei-com-cn/go-gitlink/v2
 go get -u gopkg.in/yaml.v3
 ```
 
@@ -205,13 +207,14 @@ COMMANDS:
    gitee    Gitee 预发布
    gitlab   GitLab 预发布，支持自定义实例（域名）
    github   GitHub 预发布
+   gitlink  GitLink 预发布
    help, h  Shows a list of commands or help for one command
 
 OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
-   --draft                                    Github 草稿 (default: false)
+   --draft                                    草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
                                               只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_） (default: "cicd-release")
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
@@ -236,6 +239,11 @@ OPTIONS:
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-username value                    Github 用户名 [%GITHUB_ACTOR%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
+   --gitlink-repository value                 Gitlink 仓库。
+                                              如：https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
+   --gitlink-username value                   Gitlink 用户名
+   --gitlink-token value                      Gitlink Token
+   --gitlink-cookie value                     Gitlink Cookie
    --help, -h                                 show help
 ```
 
@@ -253,13 +261,14 @@ COMMANDS:
    gitee    Gitee 发布
    gitlab   GitLab 发布，支持自定义实例（域名）
    github   GitHub 发布
+   gitlink  GitLink 发布
    help, h  Shows a list of commands or help for one command
 
 OPTIONS:
    --release-name value                       发布名称
    --release-body value                       发布详情
    --tag value                                发布标签
-   --draft                                    Github 草稿 (default: false)
+   --draft                                    草稿 (default: false)
    --package-name value                       包名，即：GitLab 产物储存 URL 前缀。
                                               只能包含小写字母（az）、大写字母（AZ）、数字（0-9）、点（.）、连字符（-）或下划线（_） (default: "cicd-release")
    --auto-create-tag                          是否自动创建不存在的标签 (default: false)
@@ -284,6 +293,11 @@ OPTIONS:
                                               如：https://github.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release [%GITHUB_REPOSITORY%]
    --github-username value                    Github 用户名 [%GITHUB_ACTOR%]
    --github-token value                       Github Token [%GITHUB_TOKEN%]
+   --gitlink-repository value                 Gitlink 仓库。
+                                              如：https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
+   --gitlink-username value                   Gitlink 用户名
+   --gitlink-token value                      Gitlink Token
+   --gitlink-cookie value                     Gitlink Cookie
    --help, -h                                 show help
 ```
 

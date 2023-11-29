@@ -23,4 +23,8 @@ const (
 	GitlabApi                  = "gitlab-api"                     // Gitlab API
 	GitlabRepository           = "gitlab-repository"              // Gitee 仓库，如：https://gitlab.com/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
 	GitlabExportAssetsFileName = "gitlab-export-assets-file-name" // Gitlab 导出资源文件名称
+	GitlinkUsername            = "gitlink-username"               // gitlink 用户名
+	GitlinkToken               = "gitlink-token"                  // gitlink Token
+	GitlinkCookie              = "gitlink-cookie"                 // gitlink Cookie
+	GitlinkRepository          = "gitlink-repository"             // gitlink 仓库，如：https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release
 )

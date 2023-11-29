@@ -32,7 +32,7 @@ func TagFlag(required bool) cli.Flag {
 func DraftFlag() cli.Flag {
 	return &cli.BoolFlag{
 		Name:  constant.Draft,
-		Usage: "Github 草稿",
+		Usage: "草稿",
 		Value: false,
 	}
 }
@@ -169,6 +169,38 @@ func GitlabExportAssetsNameFlag() cli.Flag {
 	}
 }
 
+func GitlinkRepositoryFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GitlinkRepository,
+		Usage:    "Gitlink 仓库。\n\t如：https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release.git 仓库应该为：xuxiaowei-com-cn/cicd-release",
+		Required: required,
+	}
+}
+
+func GitlinkUsernameFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GitlinkUsername,
+		Usage:    "Gitlink 用户名",
+		Required: required,
+	}
+}
+
+func GitlinkTokenFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GitlinkToken,
+		Usage:    "Gitlink Token",
+		Required: required,
+	}
+}
+
+func GitlinkCookieFlag(required bool) cli.Flag {
+	return &cli.StringFlag{
+		Name:     constant.GitlinkCookie,
+		Usage:    "Gitlink Cookie",
+		Required: required,
+	}
+}
+
 func GiteeFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
@@ -217,6 +249,22 @@ func GithubFlag() []cli.Flag {
 	}
 }
 
+func GitlinkFlag() []cli.Flag {
+	return []cli.Flag{
+		ReleaseNameFlag(true),
+		ReleaseBodyFlag(false),
+		TagFlag(true),
+		AutoCreateTagFlag(),
+		ArtifactsFlag(),
+
+		GitlinkRepositoryFlag(true),
+		GitlinkUsernameFlag(true),
+		GitlinkTokenFlag(true),
+		GitlinkCookieFlag(true),
+		DraftFlag(),
+	}
+}
+
 func CommonFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(false),
@@ -242,5 +290,10 @@ func CommonFlag() []cli.Flag {
 		GithubRepositoryFlag(false),
 		GithubUsernameFlag(false),
 		GithubTokenFlag(false),
+
+		GitlinkRepositoryFlag(false),
+		GitlinkUsernameFlag(false),
+		GitlinkTokenFlag(false),
+		GitlinkCookieFlag(false),
 	}
 }
