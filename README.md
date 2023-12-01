@@ -111,12 +111,18 @@
 2. Windows amd64、arm64
 3. Mac amd64、arm64
 
+# 构建
+
+本项目发布在 GitHub 进行构建，并使用构建后的程序将自己发布到各大代码托管平台，发布过程参见：
+[GitHub Actions](https://github.com/xuxiaowei-com-cn/cicd-release/actions/workflows/go-push.yml)
+
 ## 下载
 
 1. [gitee](https://gitee.com/xuxiaowei-com-cn/cicd-release/releases)
 2. [jihulab](https://jihulab.com/xuxiaowei-com-cn/cicd-release/-/releases)
 3. [gitlab](https://gitlab.com/xuxiaowei-com-cn/cicd-release/-/releases)
 4. [github](https://github.com/xuxiaowei-com-cn/cicd-release/releases)
+5. [gitlink](https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release/releases)
 
 ## 支持的功能
 
