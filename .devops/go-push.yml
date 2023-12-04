@@ -24,7 +24,7 @@ workflow:
       - start
   - ref: build_0
     name: build
-    image: registry.jihulab.com/xuxiaowei-com-cn/cicd-release/golang:1.21
+    image: registry.cn-qingdao.aliyuncs.com/xuxiaowei/public:golang_1.21
     env:
       WORKSPACE: git_clone_0.git_path
     script:
