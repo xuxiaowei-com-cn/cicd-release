@@ -29,7 +29,6 @@ build:golang:1.21:
     - ./cicd-release-linux-amd64
   artifacts:
     name: "${CI_JOB_NAME}"
-    expire_in: 3 day
     paths:
       - cicd-release-*
 
@@ -96,7 +95,6 @@ build:docker:
     - docker save -o cicd-release-dev-debian-$CI_PIPELINE_ID.tar $CI_REGISTRY_IMAGE/cicd-release-debian:$tag
   artifacts:
     name: "${CI_JOB_NAME}"
-    expire_in: 3 day
     paths:
       - docker/debian/*.tar
 
@@ -121,7 +119,6 @@ build:golang:1.21-alpine3.18:
     - ./cicd-release-linux-alpine-amd64
   artifacts:
     name: "${CI_JOB_NAME}"
-    expire_in: 3 day
     paths:
       - cicd-release-*
 
@@ -188,7 +185,6 @@ build:docker:alpine3.18:
     - docker save -o cicd-release-dev-alpine-$CI_PIPELINE_ID.tar $CI_REGISTRY_IMAGE/cicd-release-alpine:$tag
   artifacts:
     name: "${CI_JOB_NAME}"
-    expire_in: 3 day
     paths:
       - docker/alpine/*.tar
 
