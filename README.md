@@ -251,6 +251,10 @@ OPTIONS:
    --gitlink-username value                   Gitlink 用户名
    --gitlink-token value                      Gitlink Token
    --gitlink-cookie value                     Gitlink Cookie
+   --gitlink-export-assets-file-name value    Gitlink 导出资源文件名称。
+                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
+                                              导出格式为 map，键：代表文件名，值：代表下载链接
+   --gitlink-attachments-prefix value         Gitlink 附件URL前缀。 (default: "https://www.gitlink.org.cn/api/attachments")
    --help, -h                                 show help
 ```
 
@@ -305,6 +309,10 @@ OPTIONS:
    --gitlink-username value                   Gitlink 用户名
    --gitlink-token value                      Gitlink Token
    --gitlink-cookie value                     Gitlink Cookie
+   --gitlink-export-assets-file-name value    Gitlink 导出资源文件名称。
+                                              主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。
+                                              导出格式为 map，键：代表文件名，值：代表下载链接
+   --gitlink-attachments-prefix value         Gitlink 附件URL前缀。 (default: "https://www.gitlink.org.cn/api/attachments")
    --help, -h                                 show help
 ```
 
