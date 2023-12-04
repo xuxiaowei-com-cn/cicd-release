@@ -16,7 +16,7 @@ workflow:
     name: git clone
     task: git_clone@1.2.9
     input:
-      remote_url: '"https://jihulab.com/xuxiaowei-com-cn/cicd-release.git"'
+      remote_url: '"https://gitlink.org.cn/xuxiaowei-com-cn/cicd-release.git"'
       ref: '"refs/heads/main"'
       commit_id: '""'
       depth: 1
