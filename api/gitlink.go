@@ -1,12 +1,16 @@
 package api
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/urfave/cli/v2"
 	"github.com/xuxiaowei-com-cn/cicd-release/constant"
 	"github.com/xuxiaowei-com-cn/go-gitlink/v2"
 	"log"
+	"net/url"
+	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -22,12 +26,19 @@ func Gitlink(prerelease bool, context *cli.Context) error {
 	var gitlinkToken = context.String(constant.GitlinkToken)
 	var gitlinkCookie = context.String(constant.GitlinkCookie)
 	var draft = context.Bool(constant.Draft)
+	var gitlinkExportAssetsFileName = context.String(constant.GitlinkExportAssetsFileName)
+	var gitlinkAttachmentsPrefix = context.String(constant.GitlinkAttachmentsPrefix)
 
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 Gitlink，路径：%s", gitlinkRepository)
 
+	_, err := url.Parse(gitlinkAttachmentsPrefix)
+	if err != nil {
+		return err
+	}
+
 	// 检查发布
-	err := GitlinkGetReleases(gitlinkCookie)
+	err = GitlinkGetReleases(gitlinkCookie)
 	if err != nil {
 		return err
 	}
@@ -51,7 +62,7 @@ func Gitlink(prerelease bool, context *cli.Context) error {
 	}
 
 	// 上传产物
-	attachments, err := GitlinkAttachments(artifacts, gitlinkCookie, gitlinkRepository)
+	attachments, err := GitlinkAttachments(artifacts, gitlinkExportAssetsFileName, gitlinkAttachmentsPrefix, gitlinkCookie, gitlinkRepository)
 	if err != nil {
 		return err
 	}
@@ -81,7 +92,7 @@ func GitlinkGetTag(gitlinkCookie string, tag string) error {
 
 // GitlinkAttachments
 // 上传产物
-func GitlinkAttachments(artifacts []string, gitlinkCookie string, gitlinkRepository string) ([]int64, error) {
+func GitlinkAttachments(artifacts []string, gitlinkExportAssetsFileName string, gitlinkAttachmentsPrefix string, gitlinkCookie string, gitlinkRepository string) ([]int64, error) {
 
 	gitClient, err := gitlink.NewClient("")
 	if err != nil {
@@ -91,6 +102,9 @@ func GitlinkAttachments(artifacts []string, gitlinkCookie string, gitlinkReposit
 	gitClient.Cookie = gitlinkCookie
 
 	var attachmentsIds []int64
+	result := make(map[string]interface{})
+
+	gitlinkAttachmentsPrefixUrl := strings.TrimRight(gitlinkAttachmentsPrefix, "/")
 
 	for _, artifact := range artifacts {
 		attachmentsData, _, err := gitClient.Attachments.PostAttachments(artifact, "")
@@ -99,8 +113,34 @@ func GitlinkAttachments(artifacts []string, gitlinkCookie string, gitlinkReposit
 		}
 		if attachmentsData.Status == 0 {
 			attachmentsIds = append(attachmentsIds, attachmentsData.Id)
+
+			fileName := filepath.Base(artifact)
+			result[fileName] = fmt.Sprintf("%s/%d", gitlinkAttachmentsPrefixUrl, attachmentsData.Id)
 		} else {
 			return nil, errors.New(attachmentsData.Message)
+		}
+	}
+
+	if gitlinkExportAssetsFileName != "" {
+
+		jsonData, err := json.Marshal(result)
+		if err != nil {
+			log.Println("Error marshal JSON:", err)
+			return nil, err
+		}
+
+		file, err := os.Create(gitlinkExportAssetsFileName)
+		if err != nil {
+			log.Printf("Create %s Error:\n%s", gitlinkExportAssetsFileName, err)
+			return nil, err
+		}
+		defer file.Close()
+
+		// 将 JSON 数据写入文件
+		_, err = file.Write(jsonData)
+		if err != nil {
+			log.Printf("Write %s Error:\n%s", gitlinkExportAssetsFileName, err)
+			return nil, err
 		}
 	}
 

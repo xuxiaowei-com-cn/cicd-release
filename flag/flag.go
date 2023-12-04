@@ -201,6 +201,21 @@ func GitlinkCookieFlag(required bool) cli.Flag {
 	}
 }
 
+func GitlinkExportAssetsFileNameFlag() cli.Flag {
+	return &cli.StringFlag{
+		Name:  constant.GitlinkExportAssetsFileName,
+		Usage: "Gitlink 导出资源文件名称。\n\t主要用于发布到 Gitee 时在版本发布中新增产物下载地址（Gitee 没有上传产物的 API）。\n\t导出格式为 map，键：代表文件名，值：代表下载链接",
+	}
+}
+
+func GitlinkAttachmentsPrefixFlag() cli.Flag {
+	return &cli.StringFlag{
+		Name:  constant.GitlinkAttachmentsPrefix,
+		Usage: "Gitlink 附件URL前缀。",
+		Value: "https://www.gitlink.org.cn/api/attachments",
+	}
+}
+
 func GiteeFlag() []cli.Flag {
 	return []cli.Flag{
 		ReleaseNameFlag(true),
@@ -208,6 +223,7 @@ func GiteeFlag() []cli.Flag {
 		TagFlag(true),
 		AutoCreateTagFlag(),
 		GitlabExportAssetsNameFlag(),
+		GitlinkExportAssetsFileNameFlag(),
 
 		GiteeRepositoryFlag(true),
 		GiteeUsername(true),
@@ -256,6 +272,8 @@ func GitlinkFlag() []cli.Flag {
 		TagFlag(true),
 		AutoCreateTagFlag(),
 		ArtifactsFlag(),
+		GitlinkExportAssetsFileNameFlag(),
+		GitlinkAttachmentsPrefixFlag(),
 
 		GitlinkRepositoryFlag(true),
 		GitlinkUsernameFlag(true),
@@ -295,5 +313,7 @@ func CommonFlag() []cli.Flag {
 		GitlinkUsernameFlag(false),
 		GitlinkTokenFlag(false),
 		GitlinkCookieFlag(false),
+		GitlinkExportAssetsFileNameFlag(),
+		GitlinkAttachmentsPrefixFlag(),
 	}
 }

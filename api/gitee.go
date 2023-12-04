@@ -42,6 +42,7 @@ func Gitee(prerelease bool, context *cli.Context) error {
 	var giteeUsername = context.String(constant.GiteeUsername)
 	var giteeToken = context.String(constant.GiteeToken)
 	var gitlabExportAssetsFileName = context.String(constant.GitlabExportAssetsFileName)
+	var gitlinkExportAssetsFileName = context.String(constant.GitlinkExportAssetsFileName)
 
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 Gitee，路径：%s", giteeRepository)
@@ -71,7 +72,7 @@ func Gitee(prerelease bool, context *cli.Context) error {
 	}
 
 	// 发布
-	err = GiteeReleases(prerelease, giteeRepository, releaseName, releaseBody, tag, giteeToken, gitlabExportAssetsFileName)
+	err = GiteeReleases(prerelease, giteeRepository, releaseName, releaseBody, tag, giteeToken, gitlabExportAssetsFileName, gitlinkExportAssetsFileName)
 	if err != nil {
 		return err
 	}
@@ -156,7 +157,7 @@ func GiteeGetReleases(giteeRepository, giteeToken string) error {
 // GiteeReleases
 // 发布
 func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, releaseBody string, tag string,
-	giteeToken string, gitlabExportAssetsFileName string) error {
+	giteeToken string, gitlabExportAssetsFileName string, gitlinkExportAssetsFileName string) error {
 
 	if gitlabExportAssetsFileName != "" {
 		jsonData, err := os.ReadFile(gitlabExportAssetsFileName)
@@ -170,6 +171,29 @@ func GiteeReleases(prerelease bool, giteeRepository string, releaseName string, 
 		err = json.Unmarshal(jsonData, &readResult)
 		if err != nil {
 			log.Printf("Unmarshal %s Error:\n%s", gitlabExportAssetsFileName, err)
+			return err
+		}
+
+		releaseBody += "\n"
+		releaseBody += "***\n"
+
+		for key, value := range readResult {
+			releaseBody += fmt.Sprintf("\n- [%s](%s)\n", key, value)
+		}
+	}
+
+	if gitlinkExportAssetsFileName != "" {
+		jsonData, err := os.ReadFile(gitlinkExportAssetsFileName)
+		if err != nil {
+			log.Printf("ReadFile %s Error:\n%s", gitlinkExportAssetsFileName, err)
+			return err
+		}
+
+		readResult := make(map[string]interface{})
+
+		err = json.Unmarshal(jsonData, &readResult)
+		if err != nil {
+			log.Printf("Unmarshal %s Error:\n%s", gitlinkExportAssetsFileName, err)
 			return err
 		}
 
