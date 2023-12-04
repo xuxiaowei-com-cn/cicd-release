@@ -58,6 +58,7 @@ build:docker:
       --context "${CI_PROJECT_DIR}/docker/debian"
       --dockerfile "${CI_PROJECT_DIR}/docker/debian/Dockerfile"
       --destination "${DOCKER_USERNAME}/cicd-release:${tag_hub}"
+      --tar-path "docker/debian/cicd-release-dev-debian-$CI_PIPELINE_ID.tar"
   artifacts:
     name: "${CI_JOB_NAME}"
     paths:
