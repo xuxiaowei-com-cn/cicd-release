@@ -3,7 +3,7 @@ module github.com/xuxiaowei-com-cn/cicd-release
 go 1.21
 
 require (
-	github.com/urfave/cli/v2 v2.25.7
+	github.com/urfave/cli/v2 v2.26.0
 	github.com/xuxiaowei-com-cn/git-go v0.0.0-20231127015559-635f5e3143dc
 	github.com/xuxiaowei-com-cn/go-gitlink/v2 v2.1.5
 	gopkg.in/yaml.v3 v3.0.1
