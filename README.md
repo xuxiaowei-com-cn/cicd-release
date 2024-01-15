@@ -141,7 +141,9 @@
 ```shell
 go env -w GOPROXY=https://goproxy.cn,direct
 # go env -w GOPROXY=https://proxy.golang.org,direct
+# go env -w GOPROXY=https://goproxy.io,direct
 # go env -w GOPROXY=https://mirrors.aliyun.com/goproxy,direct
+# go env -w GOPROXY=https://mirrors.cloud.tencent.com/go,direct
 go get -u github.com/urfave/cli/v2
 go get -u github.com/xuxiaowei-com-cn/git-go@main
 go get -u github.com/xuxiaowei-com-cn/go-gitlink/v2
