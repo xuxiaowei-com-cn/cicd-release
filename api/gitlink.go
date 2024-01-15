@@ -109,7 +109,7 @@ func GitlinkAttachments(artifacts []string, gitlinkExportAssetsFileName string, 
 		if err != nil {
 			return nil, nil, err
 		}
-		if *attachmentsData.Status == 0 {
+		if attachmentsData.Status == nil || *attachmentsData.Status == 0 {
 			attachmentIds = append(attachmentIds, attachmentsData.Id)
 
 			fileName := filepath.Base(artifact)
