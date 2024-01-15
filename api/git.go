@@ -6,6 +6,7 @@ import (
 	"log"
 	"math/big"
 	"net/url"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -71,7 +72,10 @@ func GitPushTag(instance string, repository string, username, token, tag string)
 	log.Printf("Git 推送远端 标签 %s 开始\n", tag)
 
 	cmdPush := exec.Command("git", "push", origin, tag)
-	_, err = cmdPush.Output()
+	cmdPush.Stdout = os.Stdout
+	cmdPush.Stderr = os.Stderr
+
+	err = cmdPush.Run()
 	if err != nil {
 		log.Printf("Git 推送远端 %s 标签 %s 异常：\n%s", origin, tag, err)
 		return err
