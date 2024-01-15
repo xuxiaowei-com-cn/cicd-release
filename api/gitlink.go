@@ -62,13 +62,13 @@ func Gitlink(prerelease bool, context *cli.Context) error {
 	}
 
 	// 上传产物
-	attachments, err := GitlinkAttachments(artifacts, gitlinkExportAssetsFileName, gitlinkAttachmentsPrefix, gitlinkCookie, gitlinkRepository)
+	attachmentIds, _, err := GitlinkAttachments(artifacts, gitlinkExportAssetsFileName, gitlinkCookie)
 	if err != nil {
 		return err
 	}
 
 	// 发布
-	err = GitlinkReleases(prerelease, releaseName, releaseBody, tag, gitlinkRepository, gitlinkCookie, attachments, draft)
+	err = GitlinkReleases(prerelease, releaseName, releaseBody, tag, gitlinkRepository, gitlinkCookie, attachmentIds, draft)
 	if err != nil {
 		return err
 	}
@@ -92,47 +92,45 @@ func GitlinkGetTag(gitlinkCookie string, tag string) error {
 
 // GitlinkAttachments
 // 上传产物
-func GitlinkAttachments(artifacts []string, gitlinkExportAssetsFileName string, gitlinkAttachmentsPrefix string, gitlinkCookie string, gitlinkRepository string) ([]int64, error) {
+func GitlinkAttachments(artifacts []string, gitlinkExportAssetsFileName string, gitlinkCookie string) ([]string, map[string]interface{}, error) {
 
 	gitClient, err := gitlink.NewClient("")
 	if err != nil {
-		return nil, err
+		return nil, nil, err
 	}
 
 	gitClient.Cookie = gitlinkCookie
 
-	var attachmentsIds []int64
-	result := make(map[string]interface{})
-
-	gitlinkAttachmentsPrefixUrl := strings.TrimRight(gitlinkAttachmentsPrefix, "/")
+	var attachmentIds []string
+	var attachments = make(map[string]interface{})
 
 	for _, artifact := range artifacts {
 		attachmentsData, _, err := gitClient.Attachments.PostAttachments(artifact, "")
 		if err != nil {
-			return nil, err
+			return nil, nil, err
 		}
-		if attachmentsData.Status == 0 {
-			attachmentsIds = append(attachmentsIds, attachmentsData.Id)
+		if *attachmentsData.Status == 0 {
+			attachmentIds = append(attachmentIds, attachmentsData.Id)
 
 			fileName := filepath.Base(artifact)
-			result[fileName] = fmt.Sprintf("%s/%d", gitlinkAttachmentsPrefixUrl, attachmentsData.Id)
+			attachments[fileName] = attachmentsData.Url
 		} else {
-			return nil, errors.New(attachmentsData.Message)
+			return nil, nil, errors.New(attachmentsData.Message)
 		}
 	}
 
 	if gitlinkExportAssetsFileName != "" {
 
-		jsonData, err := json.Marshal(result)
+		jsonData, err := json.Marshal(attachments)
 		if err != nil {
 			log.Println("Error marshal JSON:", err)
-			return nil, err
+			return nil, nil, err
 		}
 
 		file, err := os.Create(gitlinkExportAssetsFileName)
 		if err != nil {
 			log.Printf("Create %s Error:\n%s", gitlinkExportAssetsFileName, err)
-			return nil, err
+			return nil, nil, err
 		}
 		defer file.Close()
 
@@ -140,16 +138,16 @@ func GitlinkAttachments(artifacts []string, gitlinkExportAssetsFileName string, 
 		_, err = file.Write(jsonData)
 		if err != nil {
 			log.Printf("Write %s Error:\n%s", gitlinkExportAssetsFileName, err)
-			return nil, err
+			return nil, nil, err
 		}
 	}
 
-	return attachmentsIds, nil
+	return attachmentIds, attachments, nil
 }
 
 // GitlinkReleases
 // 发布
-func GitlinkReleases(prerelease bool, releaseName string, releaseBody string, tag string, gitlinkRepository string, gitlinkCookie string, attachments []int64, draft bool) error {
+func GitlinkReleases(prerelease bool, releaseName string, releaseBody string, tag string, gitlinkRepository string, gitlinkCookie string, attachmentIds []string, draft bool) error {
 
 	gitClient, err := gitlink.NewClient("")
 	if err != nil {
@@ -176,7 +174,7 @@ func GitlinkReleases(prerelease bool, releaseName string, releaseBody string, ta
 	}
 
 	requestBody := &gitlink.PostReleasesRequestBody{
-		AttachmentIds: attachments,
+		AttachmentIds: attachmentIds,
 		Body:          releaseBody,
 		Name:          releaseName,
 		TagName:       tag,
