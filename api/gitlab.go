@@ -48,6 +48,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 	var gitlabUsername = context.String(constant.GitlabUsername)
 	var gitlabToken = context.String(constant.GitlabToken)
 	var gitlabExportAssetsFileName = context.String(constant.GitlabExportAssetsFileName)
+	var gitlabImportAssetsFileName = context.String(constant.GitlabImportAssetsFileName)
 
 	log.Printf("是否是预发布版本：%v", prerelease)
 	log.Printf("发布到 GitLab，实例：%s，路径：%s", gitlabInstance, gitlabRepository)
@@ -95,7 +96,7 @@ func Gitlab(prerelease bool, context *cli.Context) error {
 
 	// 发布
 	err = GitlabReleases(releaseName, releaseBody, tag, milestones,
-		baseUrl, gitlabApi, gitlabRepositoryEscape, gitlabToken, genericPackages)
+		baseUrl, gitlabApi, gitlabRepositoryEscape, gitlabToken, genericPackages, gitlabImportAssetsFileName)
 	if err != nil {
 		return err
 	}
@@ -219,7 +220,7 @@ func GitlabGetReleases(getReleasesUrl string, gitlabToken string) error {
 // 发布
 func GitlabReleases(releaseName string, releaseBody string, tag string, milestones []string,
 	baseUrl *url.URL, gitlabApi string, gitlabRepositoryEscape string, gitlabToken string,
-	genericPackages map[string]interface{}) error {
+	genericPackages map[string]interface{}, gitlabImportAssetsFileName string) error {
 
 	data := Data{
 		Name:        releaseName,
@@ -238,6 +239,31 @@ func GitlabReleases(releaseName string, releaseBody string, tag string, mileston
 			assets.Links = append(assets.Links, link)
 		}
 	}
+
+	readResult := make(map[string]interface{})
+
+	if gitlabImportAssetsFileName != "" {
+		jsonData, err := os.ReadFile(gitlabImportAssetsFileName)
+		if err != nil {
+			log.Printf("ReadFile %s Error:\n%s", gitlabImportAssetsFileName, err)
+			return err
+		}
+
+		err = json.Unmarshal(jsonData, &readResult)
+		if err != nil {
+			log.Printf("Unmarshal %s Error:\n%s", gitlabImportAssetsFileName, err)
+			return err
+		}
+	}
+
+	for key, value := range readResult {
+		link := Link{
+			Name: key,
+			Url:  value.(string),
+		}
+		assets.Links = append(assets.Links, link)
+	}
+
 	data.Assets = assets
 
 	jsonData, err := json.Marshal(data)

@@ -169,6 +169,13 @@ func GitlabExportAssetsNameFlag() cli.Flag {
 	}
 }
 
+func GitlabImportAssetsFileNameFlag() cli.Flag {
+	return &cli.StringFlag{
+		Name:  constant.GitlabImportAssetsFileName,
+		Usage: "Gitlab 导入资源文件名称。\n\t主要用于发布到未启用 GitLab 软件包库时，发布中产物下载地址。\n\t导入格式为 map，键：代表文件名，值：代表下载链接",
+	}
+}
+
 func GitlinkRepositoryFlag(required bool) cli.Flag {
 	return &cli.StringFlag{
 		Name:     constant.GitlinkRepository,
@@ -247,6 +254,7 @@ func GitlabFlag() []cli.Flag {
 		GitlabUsernameFlag(true),
 		GitlabTokenFlag(true),
 		GitlabExportAssetsNameFlag(),
+		GitlabImportAssetsFileNameFlag(),
 	}
 }
 
@@ -304,6 +312,7 @@ func CommonFlag() []cli.Flag {
 		GitlabUsernameFlag(false),
 		GitlabTokenFlag(false),
 		GitlabExportAssetsNameFlag(),
+		GitlabImportAssetsFileNameFlag(),
 
 		GithubRepositoryFlag(false),
 		GithubUsernameFlag(false),
