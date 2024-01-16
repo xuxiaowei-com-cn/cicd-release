@@ -210,7 +210,6 @@ jobs:
 
   release-framagit:
     needs:
-      - build
       - release-gitlab
     runs-on: ubuntu-latest
 
@@ -248,7 +247,6 @@ jobs:
 
   release-gitee:
     needs:
-      - build
       - release-gitlink
     runs-on: ubuntu-latest
 
